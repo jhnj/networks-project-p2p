@@ -1,2 +1,3 @@
 rootProject.name = 'tietoliikenneprojekti'
+include 'tracker'
 
