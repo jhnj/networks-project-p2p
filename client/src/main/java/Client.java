@@ -20,7 +20,7 @@ public class Client {
         try {
             Socket socket = new Socket("localhost", 3004);
             OutputStream out = socket.getOutputStream();
-            String jsonString = "{ \"action\": \"file_list\", \"existing_files\": [] }";
+            String jsonString = "{ \"action\": \"file_list\", \"existing_files\": [\"Test\"] }";
             byte[] data = new byte[3 + jsonString.length()];
             data[0] = (byte) 0x00;
             data[1] = (byte) 0x00;

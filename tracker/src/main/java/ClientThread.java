@@ -1,6 +1,8 @@
 import wj.exceptions.WJException;
 import wj.reader.WJReader;
 import wj.reader.WJType;
+import wj.json.FileListRequest;
+import wj.json.MessageParser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,6 +54,12 @@ public class ClientThread implements Runnable {
         try {
             String jsonString = this.reader.getJsonString();
             System.out.println(jsonString);
+
+            System.out.println(MessageParser.getAction(jsonString));
+            FileListRequest flRequest = MessageParser.parseFileListRequest(jsonString);
+            System.out.println("Test");
+        } catch (IOException e) {
+            System.out.println("IOException while parsing JSON string: " + e.getMessage());
         } catch (WJException e) {
             System.out.println("Error while retrieving JSON string: " + e.getMessage());
         }
