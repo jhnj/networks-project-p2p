@@ -8,7 +8,7 @@ import java.io.IOException;
 /**
  * Created by walter on 2017-03-18.
  */
-public class MessageParser {
+public class WJMessage {
 
     public static String getAction(String jsonString) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
