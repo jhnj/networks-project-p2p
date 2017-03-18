@@ -41,10 +41,7 @@ public class File {
 
         if (size != file.size) return false;
         if (hash != file.hash) return false;
-        if (name != null ? !name.equals(file.name) : file.name != null) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        return Arrays.equals(blocks, file.blocks);
-
+        return name != null ? name.equals(file.name) : file.name == null;
     }
 
     @Override
@@ -52,7 +49,6 @@ public class File {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + size;
         result = 31 * result + hash;
-        result = 31 * result + Arrays.hashCode(blocks);
         return result;
     }
 }
