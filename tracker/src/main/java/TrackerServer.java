@@ -1,18 +1,17 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Iterator;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.*;
 
 /**
  * Created by walter on 2017-03-18.
  */
 public class TrackerServer {
     ServerSocket serverSocket;
-    private CopyOnWriteArrayList<File> files;
+    private Set<File> files;
 
     public TrackerServer(int port) {
-        this.files = new CopyOnWriteArrayList<>();
+        this.files = Collections.synchronizedSet(new HashSet<>());
         try {
             this.serverSocket = new ServerSocket(port);
         } catch (IOException e) {
@@ -37,7 +36,7 @@ public class TrackerServer {
         this.files.add(file);
     }
 
-    public Iterator<File> getFilesIterator() {
-        return this.files.iterator();
+    public Set<File> getFiles() {
+        return this.files;
     }
 }
