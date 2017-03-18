@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /**
  * Created by walter on 2017-03-18.
  */
@@ -28,5 +30,29 @@ public class File {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        File file = (File) o;
+
+        if (size != file.size) return false;
+        if (hash != file.hash) return false;
+        if (name != null ? !name.equals(file.name) : file.name != null) return false;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        return Arrays.equals(blocks, file.blocks);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + size;
+        result = 31 * result + hash;
+        result = 31 * result + Arrays.hashCode(blocks);
+        return result;
     }
 }
