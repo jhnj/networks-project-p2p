@@ -1,19 +1,17 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by walter on 2017-03-18.
  */
 public class TrackerServer {
     ServerSocket serverSocket;
-    private List<File> files;
+    private Set<File> files;
 
     public TrackerServer(int port) {
-        this.files = Collections.synchronizedList(new ArrayList<>());
+        this.files = Collections.synchronizedSet(new HashSet<>());
         try {
             this.serverSocket = new ServerSocket(port);
         } catch (IOException e) {
@@ -38,7 +36,7 @@ public class TrackerServer {
         this.files.add(file);
     }
 
-    public List<File> getFiles() {
+    public Set<File> getFiles() {
         return this.files;
     }
 }
