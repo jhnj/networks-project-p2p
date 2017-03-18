@@ -53,16 +53,27 @@ public class ClientThread implements Runnable {
     private void handleJSONRequest() {
         try {
             String jsonString = this.reader.getJsonString();
-            System.out.println(jsonString);
+            String action = WJMessage.getAction(jsonString);
 
-            System.out.println(WJMessage.getAction(jsonString));
-            FileListRequest flRequest = WJMessage.parseFileListRequest(jsonString);
-            System.out.println("Test");
+            switch (action) {
+                case "file_list":
+                    FileListRequest request = WJMessage.parseFileListRequest(jsonString);
+                    handleFileListRequest(request);
+                    break;
+
+                default:
+                    System.out.println("Unknown action type " + action + ", skipping");
+                    break;
+            }
         } catch (IOException e) {
             System.out.println("IOException while parsing JSON string: " + e.getMessage());
         } catch (WJException e) {
             System.out.println("Error while retrieving JSON string: " + e.getMessage());
         }
+    }
+
+    private void handleFileListRequest(FileListRequest request) {
+        System.out.println("YEY!");
     }
 
     /** Closes the connection and removes the user from any files it is associated to.
