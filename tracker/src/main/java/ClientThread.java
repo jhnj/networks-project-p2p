@@ -23,16 +23,24 @@ public class ClientThread implements Runnable {
     }
 
     public void run() {
-        while (true) {
-            WJType resultType = this.reader.getResultType();
+        try {
+            loop: while (true) {
+                WJType resultType = this.reader.getResultType();
 
-            switch (resultType) {
-                case JSON_STRING:
-                    this.handleJSONRequest();
-                default:
-                    System.err.println("Non-JSON request from client");
-                    break;
+                switch (resultType) {
+                    case JSON_STRING:
+                        this.handleJSONRequest();
+                        break;
+                    case INVALID:
+                    default:
+                        System.err.println("Non-JSON request from client");
+                        this.close();
+                        break loop;
+                }
             }
+        } catch (IOException e) {
+            System.err.println(e);
+            this.close();
         }
     }
 
@@ -50,6 +58,7 @@ public class ClientThread implements Runnable {
      *  Called when the pipe is broken.
      */
     private void close() {
+
         //TODO
     }
 
