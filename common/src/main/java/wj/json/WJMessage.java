@@ -1,5 +1,6 @@
 package wj.json;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -18,6 +19,11 @@ public class WJMessage {
         } else {
             return "";
         }
+    }
+
+    public static String stringifyFileListResponse(FileListResponse fileListResponse) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(fileListResponse);
     }
 
     public static FileListRequest parseFileListRequest(String jsonString) throws IOException {
