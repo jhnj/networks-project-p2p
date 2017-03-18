@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.io.InputStream;
 
+
 /**
  * Created by johan on 18/03/17.
  * Reader for messages using the WJ protocol
@@ -43,24 +44,22 @@ public class WJReader {
 
         } catch (IOException ioException) {
             System.err.println("IOException: " + ioException.getMessage());
+            type = WJType.INVALID;
         } catch (WJException wjException) {
             System.err.println("WJException: " + wjException.getMessage());
-        } finally {
-            if (type == null) {
-                type = WJType.INVALID;
-            }
+            type = WJType.INVALID;
         }
 
         return type;
     }
 
     private String readJSON(short dataLength) {
-        String json;
+        String json = "string";
         return json;
     }
 
     private byte[] readBinary(short dataLength) {
-        byte[] data;
+        byte[] data = new byte[19];
         return data;
     }
 
