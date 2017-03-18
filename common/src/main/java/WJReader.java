@@ -1,5 +1,7 @@
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 
 /**
@@ -53,21 +55,38 @@ public class WJReader {
         return type;
     }
 
-    private String readJsonString(short dataLength) {
-        String string = "string";
-        return string;
+    private String readJsonString(short dataLength) throws IOException, WJException {
+        char[] string = new char[dataLength];
+        Reader inputStreamReader = new InputStreamReader(this.inputStream, "UTF-8");
+        int len = inputStreamReader.read(string, 0, dataLength);
+        if (len != dataLength) {
+            throw new WJException("Wrong data length");
+        }
+
+        return String.valueOf(string);
     }
 
-    private byte[] readBinary(short dataLength) {
-        byte[] data = new byte[19];
+    private byte[] readBinary(short dataLength) throws IOException, WJException {
+        byte[] data = new byte[dataLength];
+        int len = this.inputStream.read(data, 0, dataLength);
+        if (len != dataLength) {
+            throw new WJException("Wrong data length");
+        }
+
         return data;
     }
 
-    public String getJsonString() throws WJException{
+    public String getJsonString() throws WJException {
+        if (jsonString == null) {
+            throw new WJException("JsonString not found");
+        }
         return jsonString;
     }
 
-    public byte[] getBinary() throws WJException{
+    public byte[] getBinary() throws WJException {
+        if (binary == null) {
+            throw new WJException("Binary not found");
+        }
         return binary;
     }
 }
