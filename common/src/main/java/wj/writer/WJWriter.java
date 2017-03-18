@@ -28,6 +28,7 @@ public class WJWriter {
         outputStream.write((byte) length & 0xFF);
 
         outputStream.write(data);
+        outputStream.flush();
     }
 
     public void writeJsonString(String jsonString) throws IOException {
@@ -43,5 +44,6 @@ public class WJWriter {
 
         Writer outputStreamWriter = new OutputStreamWriter(outputStream);
         outputStreamWriter.write(jsonString);
+        outputStreamWriter.flush();
     }
 }
