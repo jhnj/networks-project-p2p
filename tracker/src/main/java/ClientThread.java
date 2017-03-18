@@ -39,7 +39,7 @@ public class ClientThread implements Runnable {
                 }
             }
         } catch (IOException e) {
-            System.err.println(e);
+            System.out.println("Client " + this.socket.getInetAddress() + " disconnected: " + e.getMessage());
             this.close();
         }
     }
