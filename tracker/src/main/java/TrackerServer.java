@@ -19,8 +19,11 @@ public class TrackerServer {
     public void listen() {
         System.out.println("Listening for connections on port " + this.serverSocket.getLocalPort() + "...");
         try {
-            Socket socket = this.serverSocket.accept();
-            System.out.println("Accepted a connection from " + socket.getInetAddress().toString());
+            while (true) {
+                Socket socket = this.serverSocket.accept();
+                new Thread(new ClientThread(this, socket));
+                System.out.println("Accepted a connection from " + socket.getInetAddress().toString());
+            }
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
