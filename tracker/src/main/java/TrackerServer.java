@@ -37,8 +37,13 @@ public class TrackerServer {
         }
     }
 
-    public void addFile(WJFile file) {
-        this.files.put(file, Collections.synchronizedSet(new HashSet()));
+    public boolean addFile(WJFile file) {
+        if (this.files.containsKey(file)) {
+            return false;
+        } else {
+            this.files.put(file, Collections.synchronizedSet(new HashSet()));
+            return true;
+        }
     }
 
     public void addUserToFile(WJFile file, WJClient user) throws FileNotInServerException {

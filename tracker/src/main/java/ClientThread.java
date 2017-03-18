@@ -1,10 +1,7 @@
 import wj.exceptions.WJException;
-import wj.json.FileListResponse;
-import wj.json.WJFile;
+import wj.json.*;
 import wj.reader.WJReader;
 import wj.reader.WJType;
-import wj.json.FileListRequest;
-import wj.json.WJMessage;
 import wj.writer.WJWriter;
 
 import java.io.IOException;
@@ -66,8 +63,13 @@ public class ClientThread implements Runnable {
 
             switch (action) {
                 case "file_list":
-                    FileListRequest request = WJMessage.parseFileListRequest(jsonString);
-                    handleFileListRequest(request);
+                    FileListRequest fileListRequest = WJMessage.parseFileListRequest(jsonString);
+                    handleFileListRequest(fileListRequest);
+                    break;
+
+                case "add_file":
+                    AddFileRequest addFileRequest = WJMessage.parseAddFileRequest(jsonString);
+                    handleAddFileRequest(addFileRequest);
                     break;
 
                 default:
@@ -79,6 +81,14 @@ public class ClientThread implements Runnable {
         } catch (WJException e) {
             System.out.println("Error while retrieving JSON string: " + e.getMessage());
         }
+    }
+
+    private void handleAddFileRequest(AddFileRequest request) throws IOException {
+        WJFile file = request.getFile();
+        boolean wasAdded = this.server.addFile(file);
+        AddFileResponse response = new AddFileResponse(wasAdded);
+        String responseString = WJMessage.stringifyAddFileResponse(response);
+        writer.writeJsonString(responseString);
     }
 
     //TODO: Check what files the user has

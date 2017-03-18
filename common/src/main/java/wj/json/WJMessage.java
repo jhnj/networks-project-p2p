@@ -26,15 +26,20 @@ public class WJMessage {
         return objectMapper.readValue(jsonString, AddFileRequest.class);
     }
 
+    public static FileListRequest parseFileListRequest(String jsonString) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(jsonString, FileListRequest.class);
+    }
+
+    public static String stringifyAddFileResponse(AddFileResponse addFileResponse) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(addFileResponse);
+    }
+
 
     public static String stringifyFileListResponse(FileListResponse fileListResponse) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(fileListResponse);
-    }
-
-    public static FileListRequest parseFileListRequest(String jsonString) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(jsonString, FileListRequest.class);
     }
 
 }
