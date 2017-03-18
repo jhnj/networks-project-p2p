@@ -1,13 +1,26 @@
+import java.io.IOException;
 import java.net.ServerSocket;
 
 /**
  * Created by walter on 2017-03-18.
  */
 public class TrackerServer {
-    int port;
+    ServerSocket serverSocket;
 
     public TrackerServer(int port) {
-        this.port = port;
+        try {
+            this.serverSocket = new ServerSocket(port);
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
+    public void listen() {
+        System.out.println("Listening for connections on port " + this.serverSocket.getLocalPort() + "...");
+        try {
+            this.serverSocket.accept();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+    }
 }

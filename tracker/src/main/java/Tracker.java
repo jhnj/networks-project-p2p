@@ -1,5 +1,7 @@
 public class Tracker {
     public static void main(String[] args) {
-        System.out.println("Hello, tracker!");
+        System.out.println("Tracker");
+        TrackerServer server = new TrackerServer(3004);
+        server.listen();
     }
 }
