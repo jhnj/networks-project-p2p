@@ -1,4 +1,5 @@
 rootProject.name = 'tietoliikenneprojekti'
 include 'tracker'
 include 'client'
+include 'common'
 

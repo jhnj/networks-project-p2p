@@ -12,3 +12,30 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
+
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+project(':client') {
+    dependencies {
+        compile "joda-time:joda-time:2.2"
+        compile project(':common')
+        testCompile group: 'junit', name: 'junit', version: '4.11'
+    }
+}
+
+project(':tracker') {
+    dependencies {
+        compile "joda-time:joda-time:2.2"
+        compile project(':common')
+        testCompile group: 'junit', name: 'junit', version: '4.11'
+    }
+}
+
+
+
