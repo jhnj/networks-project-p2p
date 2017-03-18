@@ -9,6 +9,8 @@ import org.joda.time.LocalTime;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Client {
     public static void main(String[] args) {
@@ -18,8 +20,18 @@ public class Client {
         try {
             Socket socket = new Socket("localhost", 3004);
             OutputStream out = socket.getOutputStream();
+            String jsonString = "Some json";
+            byte[] data = new byte[3 + jsonString.length()];
+            data[0] = (byte) 0x00;
+            data[1] = (byte) 0x00;
+            data[2] = (byte) jsonString.length();
+            int i = 3;
+            for (char ch: jsonString.toCharArray()) {
+                data[i] = (byte) ch;
+                i++;
+            }
 
-            out.write("some data".getBytes());
+            out.write(data);
             out.flush();
             out.close();
 

@@ -17,7 +17,7 @@ public class WJReader {
         this.inputStream = inputStream;
     }
 
-    public WJType getResultType() {
+    public WJType getResultType() throws IOException {
         byte[] headers = new byte[3];
         WJType type;
         short dataLength;
@@ -26,7 +26,7 @@ public class WJReader {
             int headerLen = this.inputStream.read(headers, 0, 3);
 
             if (headerLen != 3) {
-                throw new WJException("Invalid header");
+                throw new WJException("Invalid header, found only " + headerLen);
             }
 
             dataLength = (short) ((headers[1] & 0xFF) << 8 | (headers[2] & 0xFF));
@@ -44,9 +44,6 @@ public class WJReader {
 
             }
 
-        } catch (IOException ioException) {
-            System.err.println("IOException: " + ioException.getMessage());
-            type = WJType.INVALID;
         } catch (WJException wjException) {
             System.err.println("WJException: " + wjException.getMessage());
             type = WJType.INVALID;
