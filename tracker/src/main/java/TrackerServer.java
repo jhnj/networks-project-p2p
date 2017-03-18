@@ -8,10 +8,10 @@ import java.util.*;
  */
 public class TrackerServer {
     ServerSocket serverSocket;
-    private Map<File, List<User>> files;
+    private Map<File, Set<User>> files;
 
     public TrackerServer(int port) {
-        this.files = Collections.synchronizedMap(new HashMap<>());
+        this.files = Collections.synchronizedMap(new HashMap());
         try {
             this.serverSocket = new ServerSocket(port);
         } catch (IOException e) {
@@ -33,12 +33,29 @@ public class TrackerServer {
     }
 
     public void addFile(File file) {
-        this.files.put(file, Collections.synchronizedList(new ArrayList()));
+        this.files.put(file, Collections.synchronizedSet(new HashSet()));
     }
 
     public void addUserToFile(File file, User user) throws FileNotInServerException {
-
+        if (this.files.containsKey(file)) {
+            this.files.get(file).add(user);
+        } else {
+            throw new FileNotInServerException();
+        }
     }
+
+    public void removeUserFromFile(File file, User user) throws FileNotInServerException, UserNotInFileException {
+        if (this.files.containsKey(file)) {
+            if (this.files.get(file).contains(user)) {
+                this.files.get(file).remove(user);
+            } else {
+                throw new UserNotInFileException();
+            }
+        } else {
+            throw new FileNotInServerException();
+        }
+    }
+
 
     public Set<File> getFiles() {
         return this.files.keySet();
