@@ -24,7 +24,7 @@ public class TrackerServer {
         try {
             while (true) {
                 Socket socket = this.serverSocket.accept();
-                new Thread(new ClientThread(this, socket));
+                new Thread(new ClientThread(this, socket)).run();
                 System.out.println("Accepted a connection from " + socket.getInetAddress().toString());
             }
         } catch (IOException e) {
