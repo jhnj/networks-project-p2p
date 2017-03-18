@@ -27,7 +27,7 @@ public class ClientThread implements Runnable {
             WJType resultType = this.reader.getResultType();
 
             switch (resultType) {
-                case JSON:
+                case JSON_STRING:
                     this.handleJSONRequest();
                 default:
                     System.err.println("Non-JSON request from client");
@@ -38,7 +38,7 @@ public class ClientThread implements Runnable {
 
     private void handleJSONRequest() {
         try {
-            String jsonString = this.reader.getJSON();
+            String jsonString = this.reader.getJsonString();
             System.out.println(jsonString);
         } catch (WJException e) {
             System.out.println("Error while retrieving JSON string: " + e.getMessage());
