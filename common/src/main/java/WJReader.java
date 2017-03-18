@@ -1,5 +1,7 @@
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 
 /**
@@ -9,7 +11,7 @@ import java.io.InputStream;
 public class WJReader {
     private InputStream inputStream;
     private byte[] binary;
-    private String json;
+    private String jsonString;
 
     public WJReader(InputStream inputStream) {
         this.inputStream = inputStream;
@@ -31,8 +33,8 @@ public class WJReader {
 
             switch (headers[0]) {
                 case (short) 0:
-                    this.json = readJSON(dataLength);
-                    type = WJType.JSON;
+                    this.jsonString = readJsonString(dataLength);
+                    type = WJType.JSON_STRING;
                     break;
                 case (short) 1:
                     this.binary = readBinary(dataLength);
@@ -53,21 +55,38 @@ public class WJReader {
         return type;
     }
 
-    private String readJSON(short dataLength) {
-        String json = "string";
-        return json;
+    private String readJsonString(short dataLength) throws IOException, WJException {
+        char[] string = new char[dataLength];
+        Reader inputStreamReader = new InputStreamReader(this.inputStream, "UTF-8");
+        int len = inputStreamReader.read(string, 0, dataLength);
+        if (len != dataLength) {
+            throw new WJException("Wrong data length");
+        }
+
+        return String.valueOf(string);
     }
 
-    private byte[] readBinary(short dataLength) {
-        byte[] data = new byte[19];
+    private byte[] readBinary(short dataLength) throws IOException, WJException {
+        byte[] data = new byte[dataLength];
+        int len = this.inputStream.read(data, 0, dataLength);
+        if (len != dataLength) {
+            throw new WJException("Wrong data length");
+        }
+
         return data;
     }
 
-    public String getJSON() throws WJException{
-        return json;
+    public String getJsonString() throws WJException {
+        if (jsonString == null) {
+            throw new WJException("JsonString not found");
+        }
+        return jsonString;
     }
 
-    public byte[] getBinary() throws WJException{
+    public byte[] getBinary() throws WJException {
+        if (binary == null) {
+            throw new WJException("Binary not found");
+        }
         return binary;
     }
 }

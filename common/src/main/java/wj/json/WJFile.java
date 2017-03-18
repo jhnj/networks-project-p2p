@@ -1,4 +1,4 @@
-package wj_json;
+package wj.json;
 
 /**
  * Created by johan on 18/03/17.

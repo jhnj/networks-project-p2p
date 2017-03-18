@@ -3,5 +3,5 @@
  * Data types for WJ messages
  */
 public enum WJType {
-    BINARY, JSON, INVALID
+    BINARY, JSON_STRING, INVALID
 }
