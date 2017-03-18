@@ -1,3 +1,5 @@
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,6 +26,10 @@ public class WJReader {
 
         try {
             int headerLen = this.inputStream.read(headers, 0, 3);
+
+            if (headerLen == -1) {
+                throw new IOException("Stream closed");
+            }
 
             if (headerLen != 3) {
                 throw new WJException("Invalid header, found only " + headerLen);
