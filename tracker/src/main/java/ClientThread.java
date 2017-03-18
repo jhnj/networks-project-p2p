@@ -1,18 +1,25 @@
 import wj.exceptions.WJException;
+import wj.json.FileListResponse;
+import wj.json.WJFile;
 import wj.reader.WJReader;
 import wj.reader.WJType;
 import wj.json.FileListRequest;
 import wj.json.WJMessage;
+import wj.writer.WJWriter;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Set;
 
 public class ClientThread implements Runnable {
     private TrackerServer server;
     private Socket socket;
     private InputStream input;
+    private OutputStream output;
     private WJReader reader;
+    private WJWriter writer;
 
     ClientThread(TrackerServer server, Socket socket) {
         this.server = server;
@@ -20,12 +27,14 @@ public class ClientThread implements Runnable {
 
         try {
             this.input = socket.getInputStream();
+            this.output = socket.getOutputStream();
         } catch (IOException e) {
             System.err.println(e);
             this.close();
         }
 
         this.reader = new WJReader(this.input);
+        this.writer = new WJWriter(this.output);
     }
 
     public void run() {
@@ -72,8 +81,14 @@ public class ClientThread implements Runnable {
         }
     }
 
-    private void handleFileListRequest(FileListRequest request) {
-        System.out.println("YEY!");
+    //TODO: Check what files the user has
+    private void handleFileListRequest(FileListRequest request) throws IOException {
+        Set<WJFile> fileSet = server.getFiles();
+        WJFile[] files = new WJFile[fileSet.size()];
+        files = fileSet.toArray(files);
+        FileListResponse response = new FileListResponse(files);
+        String responseString = WJMessage.stringifyFileListResponse(response);
+        this.writer.writeJsonString(responseString);
     }
 
     /** Closes the connection and removes the user from any files it is associated to.
