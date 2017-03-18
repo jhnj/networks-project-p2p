@@ -1,3 +1,8 @@
+import wj.exceptions.FileNotInServerException;
+import wj.exceptions.UserNotInFileException;
+import wj.json.WJClient;
+import wj.json.WJFile;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -8,7 +13,7 @@ import java.util.*;
  */
 public class TrackerServer {
     ServerSocket serverSocket;
-    private Map<File, Set<User>> files;
+    private Map<WJFile, Set<WJClient>> files;
 
     public TrackerServer(int port) {
         this.files = Collections.synchronizedMap(new HashMap());
@@ -32,11 +37,11 @@ public class TrackerServer {
         }
     }
 
-    public void addFile(File file) {
+    public void addFile(WJFile file) {
         this.files.put(file, Collections.synchronizedSet(new HashSet()));
     }
 
-    public void addUserToFile(File file, User user) throws FileNotInServerException {
+    public void addUserToFile(WJFile file, WJClient user) throws FileNotInServerException {
         if (this.files.containsKey(file)) {
             this.files.get(file).add(user);
         } else {
@@ -44,7 +49,7 @@ public class TrackerServer {
         }
     }
 
-    public void removeUserFromFile(File file, User user) throws FileNotInServerException, UserNotInFileException {
+    public void removeUserFromFile(WJFile file, WJClient user) throws FileNotInServerException, UserNotInFileException {
         if (this.files.containsKey(file)) {
             if (this.files.get(file).contains(user)) {
                 this.files.get(file).remove(user);
@@ -57,7 +62,7 @@ public class TrackerServer {
     }
 
 
-    public Set<File> getFiles() {
+    public Set<WJFile> getFiles() {
         return this.files.keySet();
     }
 }

@@ -1,9 +1,10 @@
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+package wj.reader;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import wj.exceptions.WJException;
 
 
 /**

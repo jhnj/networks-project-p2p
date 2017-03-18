@@ -1,3 +1,7 @@
+import wj.exceptions.WJException;
+import wj.reader.WJReader;
+import wj.reader.WJType;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;

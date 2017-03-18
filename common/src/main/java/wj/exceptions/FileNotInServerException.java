@@ -1,3 +1,5 @@
+package wj.exceptions;
+
 /**
  * Created by walter on 2017-03-18.
  */
