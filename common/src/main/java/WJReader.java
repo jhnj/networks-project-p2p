@@ -9,7 +9,7 @@ import java.io.InputStream;
 public class WJReader {
     private InputStream inputStream;
     private byte[] binary;
-    private String json;
+    private String jsonString;
 
     public WJReader(InputStream inputStream) {
         this.inputStream = inputStream;
@@ -31,8 +31,8 @@ public class WJReader {
 
             switch (headers[0]) {
                 case (short) 0:
-                    this.json = readJSON(dataLength);
-                    type = WJType.JSON;
+                    this.jsonString = readJsonString(dataLength);
+                    type = WJType.JSON_STRING;
                     break;
                 case (short) 1:
                     this.binary = readBinary(dataLength);
@@ -53,9 +53,9 @@ public class WJReader {
         return type;
     }
 
-    private String readJSON(short dataLength) {
-        String json = "string";
-        return json;
+    private String readJsonString(short dataLength) {
+        String string = "string";
+        return string;
     }
 
     private byte[] readBinary(short dataLength) {
@@ -63,8 +63,8 @@ public class WJReader {
         return data;
     }
 
-    public String getJSON() throws WJException{
-        return json;
+    public String getJsonString() throws WJException{
+        return jsonString;
     }
 
     public byte[] getBinary() throws WJException{
