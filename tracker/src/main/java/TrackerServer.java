@@ -39,8 +39,10 @@ public class TrackerServer {
 
     public boolean addFile(WJFile file) {
         if (this.files.containsKey(file)) {
+            System.out.println("Unable to add file " + file.getName() + ": file already exists");
             return false;
         } else {
+            System.out.println("Added the file " + file.getName());
             this.files.put(file, Collections.synchronizedSet(new HashSet()));
             return true;
         }
