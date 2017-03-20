@@ -2,7 +2,10 @@
  * Created by johan on 17/03/17.
  *
  */
+import wj.json.FileListRequest;
 import wj.json.WJFile;
+import wj.json.WJMessage;
+import wj.writer.WJWriter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,29 +27,20 @@ public class Client {
             String tracker = reader.readLine();
 
             Socket socket = new Socket(tracker, 3004, InetAddress.getByName("localhost"), port);
+            OutputStream out = socket.getOutputStream();
+            WJWriter writer = new WJWriter(out);
 
             while (true) {
                 System.out.println("Press A to add Files and D to download files");
                 String action = reader.readLine();
 
                 switch (action) {
-                    case "A":
-                        OutputStream out = socket.getOutputStream();
-                        String jsonString = "{ \"action\": \"file_list\", \"existing_files\": [\"Test\"] }";
-                        byte[] data = new byte[3 + jsonString.length()];
-                        data[0] = (byte) 0x00;
-                        data[1] = (byte) 0x00;
-                        data[2] = (byte) jsonString.length();
-                        int i = 3;
-                        for (char ch : jsonString.toCharArray()) {
-                            data[i] = (byte) ch;
-                            i++;
-                        }
-
-                        out.write(data);
-                        out.flush();
-                        break;
                     case "D":
+                        String[] files = { "Test" };
+                        FileListRequest request = new FileListRequest(files);
+                        writer.writeJsonString(WJMessage.stringifyFileListRequest(request));
+                        break;
+                    case "A":
                     default:
                 }
             }

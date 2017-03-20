@@ -10,6 +10,11 @@ public class FileListRequest {
     private String action;
     private String[] existing_files;
 
+    public FileListRequest(String[] existing_files) {
+        this.action = "file_list";
+        this.existing_files = existing_files;
+    }
+
     @JsonCreator
     public FileListRequest(@JsonProperty("action") String action,
                            @JsonProperty("existing_files") String[] existing_files) {
