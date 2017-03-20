@@ -36,6 +36,10 @@ public class WJMessage {
         return objectMapper.writeValueAsString(addFileResponse);
     }
 
+    public static String stringifyFileListRequest(FileListRequest fileListRequest) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(fileListRequest);
+    }
 
     public static String stringifyFileListResponse(FileListResponse fileListResponse) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();

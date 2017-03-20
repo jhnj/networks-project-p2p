@@ -4,8 +4,12 @@ package wj.json;
  * Created by walter on 2017-03-18.
  */
 public class FileListRequest {
-    private String action;
+    private String action = "file_list";
     private String[] existing_files;
+
+    public FileListRequest(String[] existing_files) {
+        this.existing_files = existing_files;
+    }
 
     public String getAction() {
         return action;
