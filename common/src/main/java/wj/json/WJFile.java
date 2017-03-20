@@ -1,5 +1,6 @@
 package wj.json;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Arrays;
@@ -17,7 +18,11 @@ public class WJFile {
     // An array containing the block hashes of the file
     private String[] blocks;
 
-    public WJFile(String name, int size, String hash, String[] blocks) {
+    @JsonCreator
+    public WJFile(@JsonProperty("name") String name,
+                  @JsonProperty("size") int size,
+                  @JsonProperty("hash") String hash,
+                  @JsonProperty("blocks") String[] blocks) {
         this.name = name;
         this.size = size;
         this.hash = hash;

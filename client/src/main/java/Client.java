@@ -2,6 +2,7 @@
  * Created by johan on 17/03/17.
  *
  */
+import wj.json.AddFileRequest;
 import wj.json.FileListRequest;
 import wj.json.WJFile;
 import wj.json.WJMessage;
@@ -42,6 +43,14 @@ public class Client {
                         break;
 
                     case "A":
+                        System.out.println("Enter the file path: ");
+                        String path = reader.readLine();
+                        String[] blocks = { "jaaa", "hmmm" };
+                        WJFile file = new WJFile("dummy_file.jpg", 3004, "abc", blocks);
+                        AddFileRequest addFileRequest = new AddFileRequest(file);
+                        writer.writeJsonString(WJMessage.stringifyAddFileRequest(addFileRequest));
+                        break;
+
                     default:
                 }
             }
