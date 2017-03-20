@@ -37,13 +37,20 @@ public class WJWriter {
             throw new IOException("String too large");
         }
 
-        // Write header, data length big endian
-        outputStream.write((byte) 0x00);
-        outputStream.write((byte) (length >> 8) & 0xFF);
-        outputStream.write((byte) length & 0xFF);
+        byte[] data = new byte[3 + jsonString.length()];
 
-        Writer outputStreamWriter = new OutputStreamWriter(outputStream);
-        outputStreamWriter.write(jsonString);
-        outputStreamWriter.flush();
+        // Write header, data length big endian
+        data[0] = (byte) 0x00;
+        data[1] = (byte) ((length >> 8) & 0xFF);
+        data[2] = (byte) (length & 0xFF);
+
+        int i = 3;
+        for (char ch : jsonString.toCharArray()) {
+            data[i] = (byte) ch;
+            i++;
+        }
+
+        outputStream.write(data);
+        outputStream.flush();
     }
 }
