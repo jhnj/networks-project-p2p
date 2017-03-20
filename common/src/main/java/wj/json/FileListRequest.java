@@ -1,13 +1,19 @@
 package wj.json;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by walter on 2017-03-18.
  */
 public class FileListRequest {
-    private String action = "file_list";
+    private String action;
     private String[] existing_files;
 
-    public FileListRequest(String[] existing_files) {
+    @JsonCreator
+    public FileListRequest(@JsonProperty("action") String action,
+                           @JsonProperty("existing_files") String[] existing_files) {
+        this.action = action;
         this.existing_files = existing_files;
     }
 
