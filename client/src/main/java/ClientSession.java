@@ -1,8 +1,5 @@
 import wj.exceptions.WJException;
-import wj.json.AddFileRequest;
-import wj.json.FileListRequest;
-import wj.json.WJFile;
-import wj.json.WJMessage;
+import wj.json.*;
 import wj.reader.WJReader;
 import wj.reader.WJType;
 import wj.writer.WJWriter;
@@ -42,7 +39,7 @@ public class ClientSession {
         writer.writeJsonString(WJMessage.stringifyAddFileRequest(addFileRequest));
     }
 
-    public void downloadFileList() throws IOException, WJException {
+    public WJFile[] requestFileList() throws IOException, WJException {
         String[] files = { "Test" };
         FileListRequest request = new FileListRequest(files);
         writer.writeJsonString(WJMessage.stringifyFileListRequest(request));
@@ -50,9 +47,12 @@ public class ClientSession {
         WJType resultType = reader.getResultType();
         if (resultType == WJType.JSON_STRING) {
             String jsonString = reader.getJsonString();
-
+            FileListResponse fileListResponse = WJMessage.parseFileListResponse(jsonString);
+            return fileListResponse.getFiles();
         } else {
             System.err.println("Invalid response type from server");
+            WJFile[] noFiles = {};
+            return noFiles;
         }
     }
 }

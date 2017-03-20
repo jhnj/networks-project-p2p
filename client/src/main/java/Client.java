@@ -3,13 +3,7 @@
  *
  */
 import wj.exceptions.WJException;
-import wj.json.AddFileRequest;
-import wj.json.FileListRequest;
 import wj.json.WJFile;
-import wj.json.WJMessage;
-import wj.reader.WJReader;
-import wj.reader.WJType;
-import wj.writer.WJWriter;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -36,14 +30,18 @@ public class Client {
 
                 switch (action) {
                     case "D":
-                        session.downloadFileList();
+                        WJFile[] serverFiles = session.requestFileList();
+                        System.out.println("Files:");
+                        for (int i = 0; i < serverFiles.length; i++) {
+                            System.out.println("  " + i + ". " + serverFiles[i].getName());
+                        }
                         break;
 
                     case "A":
                         System.out.println("Enter the file path: ");
                         String path = consoleReader.readLine();
                         String[] blocks = { "jaaa", "hmmm" };
-                        WJFile file = new WJFile("dummy_file.jpg", 3004, "abc", blocks);
+                        WJFile file = new WJFile(path, 3004, "abc", blocks);
 
                         session.addFile(file);
                         break;
