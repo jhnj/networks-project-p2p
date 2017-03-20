@@ -40,6 +40,7 @@ public class Client {
                         FileListRequest request = new FileListRequest(files);
                         writer.writeJsonString(WJMessage.stringifyFileListRequest(request));
                         break;
+
                     case "A":
                     default:
                 }

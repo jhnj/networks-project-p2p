@@ -84,6 +84,7 @@ public class ClientThread implements Runnable {
     }
 
     private void handleAddFileRequest(AddFileRequest request) throws IOException {
+        System.out.println("File add request from: " + this.socket.getInetAddress().getHostName());
         WJFile file = request.getFile();
         boolean wasAdded = this.server.addFile(file);
         AddFileResponse response = new AddFileResponse(wasAdded);
@@ -99,6 +100,7 @@ public class ClientThread implements Runnable {
         FileListResponse response = new FileListResponse(files);
         String responseString = WJMessage.stringifyFileListResponse(response);
         this.writer.writeJsonString(responseString);
+        System.out.println("File list request from: " + this.socket.getInetAddress().getHostName());
     }
 
     /** Closes the connection and removes the user from any files it is associated to.
