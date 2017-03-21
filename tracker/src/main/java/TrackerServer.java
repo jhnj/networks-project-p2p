@@ -56,6 +56,14 @@ public class TrackerServer {
         }
     }
 
+    public Set<WJClient> getClientsWithFile(WJFile file) throws FileNotInServerException {
+        if (this.files.containsKey(file)) {
+            return files.get(file);
+        } else {
+            throw new FileNotInServerException("File " + file.getName() + " not in server");
+        }
+    }
+
     public void removeClientFromFile(WJFile file, WJClient client) throws FileNotInServerException, UserNotInFileException {
         if (this.files.containsKey(file)) {
             if (this.files.get(file).contains(client)) {

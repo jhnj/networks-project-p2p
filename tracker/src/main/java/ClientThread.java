@@ -71,12 +71,17 @@ public class ClientThread implements Runnable {
             switch (action) {
                 case "file_list":
                     FileListRequest fileListRequest = WJMessage.parseFileListRequest(jsonString);
-                    handleFileListRequest(fileListRequest);
+                    this.handleFileListRequest(fileListRequest);
                     break;
 
                 case "add_file":
                     AddFileRequest addFileRequest = WJMessage.parseAddFileRequest(jsonString);
-                    handleAddFileRequest(addFileRequest);
+                    this.handleAddFileRequest(addFileRequest);
+                    break;
+
+                case "file_clients":
+                    FileClientsRequest fileClientsRequest = WJMessage.parseFileClientsRequest(jsonString);
+                    this.handleFileClientsRequest(fileClientsRequest);
                     break;
 
                 default:
@@ -112,7 +117,24 @@ public class ClientThread implements Runnable {
         String responseString = WJMessage.stringifyAddFileResponse(response);
         writer.writeJsonString(responseString);
     }
-    
+
+    private void handleFileClientsRequest(FileClientsRequest request) throws IOException {
+        WJClient[] clients;
+
+        try {
+            Set<WJClient> clientsSet = this.server.getClientsWithFile(request.getFile());
+            clients = clientsSet.toArray(new WJClient[clientsSet.size()]);
+        } catch (FileNotInServerException e) {
+            System.err.println("FileNotInServerException requesting clients for " + request.getFile().getName() + ": "
+                                + e.getMessage());
+            clients = new WJClient[0];
+        }
+
+        FileClientsResponse response = new FileClientsResponse(clients);
+        String responseString = WJMessage.stringifyFileClientsResponse(response);
+        writer.writeJsonString(responseString);
+    }
+
     private void handleFileListRequest(FileListRequest request) throws IOException {
         Set<WJFile> fileSet = server.getFiles();
         WJFile[] files = new WJFile[fileSet.size()];
