@@ -2,7 +2,6 @@ package wj.json;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import wj.json.WJFile;
 
 /**
  * Created by walter on 2017-03-21.
