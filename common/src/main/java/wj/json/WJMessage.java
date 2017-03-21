@@ -26,6 +26,16 @@ public class WJMessage {
         return objectMapper.readValue(jsonString, AddFileRequest.class);
     }
 
+    public static FileClientsRequest parseFileClientsRequest(String jsonString) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(jsonString, FileClientsRequest.class);
+    }
+
+    public static FileClientsResponse parseFileClientsResponse(String jsonString) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(jsonString, FileClientsResponse.class);
+    }
+
     public static FileListRequest parseFileListRequest(String jsonString) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(jsonString, FileListRequest.class);
@@ -44,6 +54,16 @@ public class WJMessage {
     public static String stringifyAddFileResponse(AddFileResponse addFileResponse) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(addFileResponse);
+    }
+
+    public static String stringifyFileClientsRequest(FileClientsRequest fileClientsRequest) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(fileClientsRequest);
+    }
+
+    public static String stringifyFileClientsResponse(FileClientsResponse fileClientsResponse) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(fileClientsResponse);
     }
 
     public static String stringifyFileListRequest(FileListRequest fileListRequest) throws JsonProcessingException {

@@ -1,3 +1,5 @@
+import wj.exceptions.FileNotInServerException;
+import wj.exceptions.UserNotInFileException;
 import wj.exceptions.WJException;
 import wj.json.*;
 import wj.reader.WJReader;
@@ -8,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.HashSet;
 import java.util.Set;
 
 public class ClientThread implements Runnable {
@@ -17,14 +20,18 @@ public class ClientThread implements Runnable {
     private OutputStream output;
     private WJReader reader;
     private WJWriter writer;
+    private WJClient client;
+    private Set<WJFile> files;
 
     ClientThread(TrackerServer server, Socket socket) {
         this.server = server;
         this.socket = socket;
+        this.files = new HashSet();
 
         try {
             this.input = socket.getInputStream();
             this.output = socket.getOutputStream();
+            this.client = new WJClient(this.socket.getInetAddress().getHostAddress(), this.socket.getPort());
         } catch (IOException e) {
             System.err.println(e);
             this.close();
@@ -64,12 +71,17 @@ public class ClientThread implements Runnable {
             switch (action) {
                 case "file_list":
                     FileListRequest fileListRequest = WJMessage.parseFileListRequest(jsonString);
-                    handleFileListRequest(fileListRequest);
+                    this.handleFileListRequest(fileListRequest);
                     break;
 
                 case "add_file":
                     AddFileRequest addFileRequest = WJMessage.parseAddFileRequest(jsonString);
-                    handleAddFileRequest(addFileRequest);
+                    this.handleAddFileRequest(addFileRequest);
+                    break;
+
+                case "file_clients":
+                    FileClientsRequest fileClientsRequest = WJMessage.parseFileClientsRequest(jsonString);
+                    this.handleFileClientsRequest(fileClientsRequest);
                     break;
 
                 default:
@@ -85,14 +97,44 @@ public class ClientThread implements Runnable {
 
     private void handleAddFileRequest(AddFileRequest request) throws IOException {
         System.out.println("File add request from: " + this.socket.getInetAddress().getHostName());
+
+        //Add the file
         WJFile file = request.getFile();
         boolean wasAdded = this.server.addFile(file);
+
+        //Associate the user with the file
+        if (wasAdded) {
+            try {
+                this.server.addClientToFile(file, this.client);
+                this.files.add(file);
+            } catch (FileNotInServerException e) {
+                System.err.println("FileNotInServerException: " + e.getMessage());
+            }
+        }
+
+        //Respond to the request
         AddFileResponse response = new AddFileResponse(wasAdded);
         String responseString = WJMessage.stringifyAddFileResponse(response);
         writer.writeJsonString(responseString);
     }
 
-    //TODO: Check what files the user has
+    private void handleFileClientsRequest(FileClientsRequest request) throws IOException {
+        WJClient[] clients;
+
+        try {
+            Set<WJClient> clientsSet = this.server.getClientsWithFile(request.getFile());
+            clients = clientsSet.toArray(new WJClient[clientsSet.size()]);
+        } catch (FileNotInServerException e) {
+            System.err.println("FileNotInServerException requesting clients for " + request.getFile().getName() + ": "
+                                + e.getMessage());
+            clients = new WJClient[0];
+        }
+
+        FileClientsResponse response = new FileClientsResponse(clients);
+        String responseString = WJMessage.stringifyFileClientsResponse(response);
+        writer.writeJsonString(responseString);
+    }
+
     private void handleFileListRequest(FileListRequest request) throws IOException {
         Set<WJFile> fileSet = server.getFiles();
         WJFile[] files = new WJFile[fileSet.size()];
@@ -108,8 +150,15 @@ public class ClientThread implements Runnable {
      *  Called when the pipe is broken.
      */
     private void close() {
-
-        //TODO
+        for (WJFile file : this.files) {
+            try {
+                this.server.removeClientFromFile(file, this.client);
+            } catch (FileNotInServerException fileNotInServerException) {
+                System.err.println("FileNotInServerException: " + fileNotInServerException);
+            } catch (UserNotInFileException userNotInFileException) {
+                System.err.println("UserNotInFileException: " + userNotInFileException);
+            }
+        }
     }
 
 }
