@@ -12,7 +12,7 @@ import java.util.Arrays;
 public class WJFile {
     private String name;
     // File size in bytes
-    private int size;
+    private long size;
     // The SHA-1 hash of the file
     private String hash;
     // An array containing the block hashes of the file
@@ -20,7 +20,7 @@ public class WJFile {
 
     @JsonCreator
     public WJFile(@JsonProperty("name") String name,
-                  @JsonProperty("size") int size,
+                  @JsonProperty("size") long size,
                   @JsonProperty("hash") String hash,
                   @JsonProperty("blocks") String[] blocks) {
         this.name = name;
@@ -38,10 +38,10 @@ public class WJFile {
     }
 
     @JsonProperty("size")
-    public int getSize() {
+    public long getSize() {
         return size;
     }
-    public void setSize(int size) {
+    public void setSize(long size) {
         this.size = size;
     }
 
@@ -78,7 +78,7 @@ public class WJFile {
     @Override
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + size;
+        result = 31 * result + (int) (size ^ (size >>> 32));
         result = 31 * result + (hash != null ? hash.hashCode() : 0);
         result = 31 * result + Arrays.hashCode(blocks);
         return result;
