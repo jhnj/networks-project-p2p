@@ -48,18 +48,18 @@ public class TrackerServer {
         }
     }
 
-    public void addUserToFile(WJFile file, WJClient user) throws FileNotInServerException {
+    public void addClientToFile(WJFile file, WJClient client) throws FileNotInServerException {
         if (this.files.containsKey(file)) {
-            this.files.get(file).add(user);
+            this.files.get(file).add(client);
         } else {
             throw new FileNotInServerException();
         }
     }
 
-    public void removeUserFromFile(WJFile file, WJClient user) throws FileNotInServerException, UserNotInFileException {
+    public void removeClientFromFile(WJFile file, WJClient client) throws FileNotInServerException, UserNotInFileException {
         if (this.files.containsKey(file)) {
-            if (this.files.get(file).contains(user)) {
-                this.files.get(file).remove(user);
+            if (this.files.get(file).contains(client)) {
+                this.files.get(file).remove(client);
             } else {
                 throw new UserNotInFileException();
             }
