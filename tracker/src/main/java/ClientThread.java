@@ -112,8 +112,7 @@ public class ClientThread implements Runnable {
         String responseString = WJMessage.stringifyAddFileResponse(response);
         writer.writeJsonString(responseString);
     }
-
-    //TODO: Check what files the user has
+    
     private void handleFileListRequest(FileListRequest request) throws IOException {
         Set<WJFile> fileSet = server.getFiles();
         WJFile[] files = new WJFile[fileSet.size()];
