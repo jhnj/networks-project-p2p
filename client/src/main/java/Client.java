@@ -32,6 +32,12 @@ public class Client {
                     case "D":
                         //Request the file list
                         WJFile[] serverFiles = session.requestFileList();
+
+                        if (serverFiles.length == 0) {
+                            System.out.println("No files uploaded yet!");
+                            break;
+                        }
+
                         System.out.println("Files:");
                         for (int i = 0; i < serverFiles.length; i++) {
                             System.out.println("  " + i + ". " + serverFiles[i].getName());
