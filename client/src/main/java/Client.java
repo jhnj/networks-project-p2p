@@ -30,20 +30,38 @@ public class Client {
 
                 switch (action) {
                     case "D":
+                        //Request the file list
                         WJFile[] serverFiles = session.requestFileList();
                         System.out.println("Files:");
                         for (int i = 0; i < serverFiles.length; i++) {
                             System.out.println("  " + i + ". " + serverFiles[i].getName());
                         }
+
+                        //Let the user pick a file
+                        System.out.print("Please select a file by its index: ");
+                        WJFile file = null;
+                        do {
+                            try {
+                                int fileIndex = Integer.parseInt(consoleReader.readLine());
+                                if (fileIndex >= 0 && fileIndex < serverFiles.length) {
+                                    file = serverFiles[fileIndex];
+                                } else {
+                                    throw new NumberFormatException();
+                                }
+                            } catch (NumberFormatException e) {
+                                System.out.println("Invalid file index, please try again");
+                            }
+                        } while (file == null);
+
                         break;
 
                     case "A":
                         System.out.println("Enter the file path: ");
                         String path = consoleReader.readLine();
                         String[] blocks = { "jaaa", "hmmm" };
-                        WJFile file = new WJFile(path, 3004, "abc", blocks);
+                        WJFile newFile = new WJFile(path, 3004, "abc", blocks);
 
-                        session.addFile(file);
+                        session.addFile(newFile);
                         break;
 
                     default:
