@@ -8,16 +8,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class FileListRequest {
     private String action;
-    private String[] existing_files;
+    private WJFile[] existing_files;
 
-    public FileListRequest(String[] existing_files) {
+    public FileListRequest(WJFile[] existing_files) {
         this.action = "file_list";
         this.existing_files = existing_files;
     }
 
     @JsonCreator
     public FileListRequest(@JsonProperty("action") String action,
-                           @JsonProperty("existing_files") String[] existing_files) {
+                           @JsonProperty("existing_files") WJFile[] existing_files) {
         this.action = action;
         this.existing_files = existing_files;
     }
@@ -30,11 +30,11 @@ public class FileListRequest {
         this.action = action;
     }
 
-    public String[] getExisting_files() {
+    public WJFile[] getExisting_files() {
         return existing_files;
     }
 
-    public void setExisting_files(String[] existing_files) {
+    public void setExisting_files(WJFile[] existing_files) {
         this.existing_files = existing_files;
     }
 }

@@ -40,7 +40,7 @@ public class ClientSession {
     }
 
     public WJFile[] requestFileList() throws IOException, WJException {
-        String[] files = { "Test" };
+        WJFile[] files = {};
         FileListRequest request = new FileListRequest(files);
         writer.writeJsonString(WJMessage.stringifyFileListRequest(request));
 
