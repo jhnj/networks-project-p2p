@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jdk.nashorn.internal.ir.Block;
 import wj.exceptions.BlockException;
 import wj.json.WJFile;
+import wj.sha1.Sha1;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,6 +55,10 @@ public class WJFileOnDisk extends WJFile {
             rf.read(data);
         }
 
+        if (this.getBlocks()[block].equals(Sha1.SHAsum(data))) {
+            throw new BlockException("Invalid hash");
+        }
+
         return data;
     }
 
@@ -64,6 +69,10 @@ public class WJFileOnDisk extends WJFile {
 
         if (this.blocksOnDisk[block]) {
             throw new BlockException("Block already on disk");
+        }
+
+        if (this.getBlocks()[block].equals(Sha1.SHAsum(data))) {
+            throw new BlockException("Invalid hash");
         }
 
         try (RandomAccessFile rf = new RandomAccessFile(file, "r")) {
