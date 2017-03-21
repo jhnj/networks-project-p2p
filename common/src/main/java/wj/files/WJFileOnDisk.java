@@ -71,14 +71,13 @@ public class WJFileOnDisk extends WJFile {
             throw new BlockException("Block already on disk");
         }
 
-        if (this.getBlocks()[block].equals(Sha1.SHAsum(data))) {
+        if (!this.getBlocks()[block].equals(Sha1.SHAsum(data))) {
             throw new BlockException("Invalid hash");
         }
 
-        try (RandomAccessFile rf = new RandomAccessFile(file, "r")) {
-            rf.seek(block * BLOCK_SIZE);
-            rf.write(data);
-        }
+        RandomAccessFile rf = new RandomAccessFile(file, "r");
+        rf.seek(block * BLOCK_SIZE);
+        rf.write(data);
     }
 
 }
