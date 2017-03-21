@@ -75,9 +75,10 @@ public class WJFileOnDisk extends WJFile {
             throw new BlockException("Invalid hash");
         }
 
-        RandomAccessFile rf = new RandomAccessFile(file, "r");
-        rf.seek(block * BLOCK_SIZE);
-        rf.write(data);
+        try (RandomAccessFile rf = new RandomAccessFile(file, "r")) {
+            rf.seek(block * BLOCK_SIZE);
+            rf.write(data);
+        }
     }
 
 }
