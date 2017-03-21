@@ -32,6 +32,12 @@ public class Client {
                     case "D":
                         //Request the file list
                         WJFile[] serverFiles = session.requestFileList();
+
+                        if (serverFiles.length == 0) {
+                            System.out.println("No files uploaded yet!");
+                            break;
+                        }
+
                         System.out.println("Files:");
                         for (int i = 0; i < serverFiles.length; i++) {
                             System.out.println("  " + i + ". " + serverFiles[i].getName());
@@ -61,7 +67,12 @@ public class Client {
                         String[] blocks = { "jaaa", "hmmm" };
                         WJFile newFile = new WJFile(path, 3004, "abc", blocks);
 
-                        session.addFile(newFile);
+                        boolean wasAdded = session.addFile(newFile);
+                        if (wasAdded) {
+                            System.out.println("File added successfully!");
+                        } else {
+                            System.out.println("Unable to add the file, perhaps it already exists?");
+                        }
                         break;
 
                     default:

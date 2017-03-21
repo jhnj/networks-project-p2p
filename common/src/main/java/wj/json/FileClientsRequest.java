@@ -10,6 +10,11 @@ public class FileClientsRequest {
     private String action;
     private WJFile file;
 
+    public FileClientsRequest(WJFile file) {
+        this.action = "file_clients";
+        this.file = file;
+    }
+
     @JsonCreator
     public FileClientsRequest(@JsonProperty("action") String action,
                               @JsonProperty("file")   WJFile file) {

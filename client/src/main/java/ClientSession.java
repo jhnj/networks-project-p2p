@@ -34,9 +34,35 @@ public class ClientSession {
         }
     }
 
-    public void addFile(WJFile file) throws IOException {
+    public boolean addFile(WJFile file) throws IOException, WJException {
         AddFileRequest addFileRequest = new AddFileRequest(file);
         writer.writeJsonString(WJMessage.stringifyAddFileRequest(addFileRequest));
+
+        WJType resultType = reader.getResultType();
+        if (resultType == WJType.JSON_STRING) {
+            String jsonString = reader.getJsonString();
+            AddFileResponse response = WJMessage.parseAddFileResponse(jsonString);
+            return response.isOk();
+        } else {
+            System.err.println("Invalid response type from server");
+            return false;
+        }
+    }
+
+    public WJClient[] requestFileClients(WJFile file) throws IOException, WJException {
+        FileClientsRequest request = new FileClientsRequest(file);
+        writer.writeJsonString(WJMessage.stringifyFileClientsRequest(request));
+
+        WJType resultType = reader.getResultType();
+        if (resultType == WJType.JSON_STRING) {
+            String jsonString = reader.getJsonString();
+            FileClientsResponse response = WJMessage.parseFileClientsResponse(jsonString);
+            return response.getClients();
+        } else {
+            System.err.println("Invalid response type from server");
+            WJClient[] noClients = {};
+            return noClients;
+        }
     }
 
     public WJFile[] requestFileList() throws IOException, WJException {
