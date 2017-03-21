@@ -61,7 +61,12 @@ public class Client {
                         String[] blocks = { "jaaa", "hmmm" };
                         WJFile newFile = new WJFile(path, 3004, "abc", blocks);
 
-                        session.addFile(newFile);
+                        boolean wasAdded = session.addFile(newFile);
+                        if (wasAdded) {
+                            System.out.println("File added successfully!");
+                        } else {
+                            System.out.println("Unable to add the file, perhaps it already exists?");
+                        }
                         break;
 
                     default:

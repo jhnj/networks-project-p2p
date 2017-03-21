@@ -34,9 +34,19 @@ public class ClientSession {
         }
     }
 
-    public void addFile(WJFile file) throws IOException {
+    public boolean addFile(WJFile file) throws IOException, WJException {
         AddFileRequest addFileRequest = new AddFileRequest(file);
         writer.writeJsonString(WJMessage.stringifyAddFileRequest(addFileRequest));
+
+        WJType resultType = reader.getResultType();
+        if (resultType == WJType.JSON_STRING) {
+            String jsonString = reader.getJsonString();
+            AddFileResponse response = WJMessage.parseAddFileResponse(jsonString);
+            return response.isOk();
+        } else {
+            System.err.println("Invalid response type from server");
+            return false;
+        }
     }
 
     public WJFile[] requestFileList() throws IOException, WJException {
