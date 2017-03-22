@@ -3,6 +3,7 @@ package wj.json;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.sun.tools.internal.ws.processor.model.Block;
 
 import java.io.IOException;
 
@@ -29,6 +30,16 @@ public class WJMessage {
     public static AddFileResponse parseAddFileResponse(String jsonString) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(jsonString, AddFileResponse.class);
+    }
+
+    public static BlockListRequest parseBlockListRequest(String jsonString) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(jsonString, BlockListRequest.class);
+    }
+
+    public static BlockListResponse parseBlockListResponse(String jsonString) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(jsonString, BlockListResponse.class);
     }
 
     public static FileClientsRequest parseFileClientsRequest(String jsonString) throws IOException {
@@ -59,6 +70,16 @@ public class WJMessage {
     public static String stringifyAddFileResponse(AddFileResponse addFileResponse) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(addFileResponse);
+    }
+
+    public static String stringifyBlockListRequest(BlockListRequest blockListRequest) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(blockListRequest);
+    }
+
+    public static String stringifyBlockListResponse(BlockListResponse blockListResponse) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(blockListResponse);
     }
 
     public static String stringifyFileClientsRequest(FileClientsRequest fileClientsRequest) throws JsonProcessingException {
