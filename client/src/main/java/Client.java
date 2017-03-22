@@ -3,15 +3,19 @@
  *
  */
 import wj.exceptions.WJException;
+import wj.files.WJFileOnDisk;
+import wj.files.WJFileOnDiskFactory;
 import wj.json.WJFile;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Map;
 
+import static wj.files.WJFileOnDiskFactory.initiateFile;
+
 public class Client {
-    Map<WJFile, String> files;
 
     public static void main(String[] args) {
         try {
@@ -23,6 +27,8 @@ public class Client {
 
             Socket socket = new Socket(tracker, 3004, InetAddress.getByName("localhost"), port);
             ClientSession session = new ClientSession(socket);
+            FileHandler fileHandler = new FileHandler(session);
+
 
             while (true) {
                 System.out.println("Press A to add Files and D to download files");
@@ -64,10 +70,11 @@ public class Client {
                     case "A":
                         System.out.println("Enter the file path: ");
                         String path = consoleReader.readLine();
-                        String[] blocks = { "jaaa", "hmmm" };
-                        WJFile newFile = new WJFile(path, 3004, "abc", blocks);
+                        System.out.println("Enter the file name: ");
+                        String name = consoleReader.readLine();
 
-                        boolean wasAdded = session.addFile(newFile);
+
+                        boolean wasAdded = fileHandler.addFile(name, path);
                         if (wasAdded) {
                             System.out.println("File added successfully!");
                         } else {

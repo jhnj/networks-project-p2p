@@ -42,6 +42,14 @@ public class WJFileOnDisk extends WJFile {
     }
 
     @JsonIgnore
+    public Boolean blockFound(int block) {
+        if (block < 0 || block >= blocksOnDisk.length) {
+            return false;
+        }
+        return blocksOnDisk[block];
+    }
+
+    @JsonIgnore
     public byte[] readBlock(int block) throws BlockException, IOException {
         byte[] data = new byte[BLOCK_SIZE];
         if (block >= this.getBlocks().length || block < 0) {
