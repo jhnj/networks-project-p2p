@@ -2,7 +2,11 @@ package wj.sha1;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Formatter;
+import java.util.stream.Stream;
+
+import static java.util.Arrays.stream;
 
 /**
  * Created by johan on 21/03/17.
@@ -15,6 +19,22 @@ public class Sha1 {
             return byteArray2Hex(md.digest(block));
         } catch (NoSuchAlgorithmException n) {
             // Return empty string in case of error
+            return "";
+        }
+    }
+
+    public static String SHAsum(String[] blockHashes) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
+            // SHA-1 hash is 160 bytes long
+            byte[] data = new byte[160 * blockHashes.length];
+            for (int i = 0; i < blockHashes.length; i++) {
+                System.arraycopy(blockHashes[i].getBytes(), 0, data, i * 160, 160);
+            }
+
+            return byteArray2Hex(md.digest(data));
+        } catch (NoSuchAlgorithmException n) {
+            // Empty string in case of error
             return "";
         }
     }
