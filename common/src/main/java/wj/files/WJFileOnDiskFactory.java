@@ -11,7 +11,7 @@ import static wj.files.WJFileOnDisk.BLOCK_SIZE;
  * Factory for initializing files
  */
 public class WJFileOnDiskFactory {
-    public WJFileOnDisk initiateFile(String name, String path) throws IOException {
+    public static WJFileOnDisk initiateFile(String name, String path) throws IOException {
         File file = new File(path);
         long size = file.length();
 
