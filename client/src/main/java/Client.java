@@ -59,6 +59,15 @@ public class Client {
                             }
                         } while (file == null);
 
+                        //Download!
+                        System.out.println("Starting download..");
+                        boolean wasDownloaded = FileDownloader.downloadFile(file, fileHandler, session);
+                        if (wasDownloaded) {
+                            System.out.println("File downloaded!");
+                        } else {
+                            System.out.println("Download failed..");
+                        }
+
                         break;
 
                     case "A":
