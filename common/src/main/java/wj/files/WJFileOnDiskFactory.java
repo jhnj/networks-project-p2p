@@ -1,5 +1,6 @@
 package wj.files;
 
+import wj.json.WJFile;
 import wj.sha1.Sha1;
 
 import java.io.*;
@@ -11,7 +12,7 @@ import static wj.files.WJFileOnDisk.BLOCK_SIZE;
  * Factory for initializing files
  */
 public class WJFileOnDiskFactory {
-    public static WJFileOnDisk initiateFile(String name, String path) throws IOException {
+    public static WJFileOnDisk initiateLocalFile(String name, String path) throws IOException {
         File file = new File(path);
         long size = file.length();
 
@@ -35,5 +36,18 @@ public class WJFileOnDiskFactory {
         String hash = Sha1.SHAsum(blockHashes);
 
         return new WJFileOnDisk(name, size, hash, blockHashes, path);
+    }
+
+    /** Instantiates a WJFileOnDisk based on a remote WJFile
+     *
+     *  Creates an empty file with the same name as the WJFile */
+    public static WJFileOnDisk initiateRemoteFile(WJFile file) throws IOException {
+        File diskFile = new File(file.getName());
+        boolean fileAdded = diskFile.createNewFile();
+        if (!fileAdded) {
+            throw new IOException("Unable to add the file locally");
+        }
+
+        return new WJFileOnDisk(file.getName(), file.getSize(), file.getHash(), file.getBlocks(), diskFile.getAbsolutePath());
     }
 }

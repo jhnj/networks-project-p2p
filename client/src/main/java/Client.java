@@ -3,17 +3,11 @@
  *
  */
 import wj.exceptions.WJException;
-import wj.files.WJFileOnDisk;
-import wj.files.WJFileOnDiskFactory;
 import wj.json.WJFile;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
-
-import static wj.files.WJFileOnDiskFactory.initiateFile;
 
 public class Client {
 
@@ -74,7 +68,7 @@ public class Client {
                         String name = consoleReader.readLine();
 
 
-                        boolean wasAdded = fileHandler.addFile(name, path);
+                        boolean wasAdded = fileHandler.addLocalFile(name, path);
                         if (wasAdded) {
                             System.out.println("File added successfully!");
                         } else {
