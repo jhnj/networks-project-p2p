@@ -45,6 +45,7 @@ public class FileDownloader {
             fileHandler.addRemoteFile(file);
         } catch (IOException e) {
             System.err.println("Unable to add the remote file locally: " + e.getMessage());
+            return false;
         }
 
         //Check what blocks the clients have
