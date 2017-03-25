@@ -66,7 +66,7 @@ public class Client {
                         if (wasDownloaded) {
                             System.out.println("File downloaded!");
                         } else {
-                            System.out.println("Download failed..");
+                            System.out.println("Download failed.");
                         }
 
                         break;

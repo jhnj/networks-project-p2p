@@ -36,7 +36,7 @@ public class FileDownloader {
         }
 
         if (clients.length == 0) {
-            System.out.println("No peers available at the moment..");
+            System.out.println("No peers available at the moment.");
             return false;
         }
 
