@@ -8,18 +8,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class BlockListRequest {
     private String action;
-    private String file;
+    private String fileHash;
 
     public BlockListRequest(String file) {
         this.action = "block_list";
-        this.file = file;
+        this.fileHash = file;
     }
 
     @JsonCreator
-    public BlockListRequest(@JsonProperty("action") String action,
-                            @JsonProperty("file")   String file) {
+    public BlockListRequest(@JsonProperty("action")     String action,
+                            @JsonProperty("fileHash")   String fileHash) {
         this.action = action;
-        this.file = file;
+        this.fileHash = fileHash;
     }
 
     public String getAction() {
@@ -30,11 +30,11 @@ public class BlockListRequest {
         this.action = action;
     }
 
-    public String getFile() {
-        return file;
+    public String getFileHash() {
+        return fileHash;
     }
 
-    public void setFile(String file) {
-        this.file = file;
+    public void setFileHash(String file) {
+        this.fileHash = file;
     }
 }
