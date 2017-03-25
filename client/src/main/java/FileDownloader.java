@@ -27,6 +27,7 @@ public class FileDownloader {
     public boolean downloadFile(WJFile file) {
         //Request available peers from the tracker
         WJClient[] clients = null;
+        System.out.println("Requesting file peers from the tracker..");
         try {
             clients = session.requestFileClients(file);
         } catch (IOException | WJException e) {
@@ -47,9 +48,8 @@ public class FileDownloader {
         }
 
         //Check what blocks the clients have
-
-
-
+        System.out.println("Checking what blocks the peers have..");
+        Map<Integer, ArrayList<WJClient>> clientBlocks = this.getBlocksWithClients(file, clients);
 
         return true;
     }
