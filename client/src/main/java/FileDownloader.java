@@ -8,9 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by walter on 2017-03-23.
@@ -52,7 +50,28 @@ public class FileDownloader {
         System.out.println("Checking what blocks the peers have..");
         Map<Integer, ArrayList<WJClient>> clientBlocks = this.getBlocksWithClients(file, clients);
 
+        //Add the clients to a priority queue so that the blocks with the fewest clients come first
+        PriorityQueue<BlockClients> blockClientsPQ = new PriorityQueue();
+        for (Map.Entry<Integer, ArrayList<WJClient>> entry : clientBlocks.entrySet()) {
+            blockClientsPQ.add(new BlockClients(entry.getKey(), entry.getValue()));
+        }
+
         return true;
+    }
+
+    private class BlockClients implements Comparable<BlockClients> {
+        public Integer block;
+        public ArrayList clients;
+
+        public BlockClients(Integer block, ArrayList clients) {
+            this.block = block;
+            this.clients = clients;
+        }
+
+        @Override
+        public int compareTo(BlockClients o) {
+            return this.clients.size() - o.clients.size();
+        }
     }
 
     /** Returns a map pointing from block indices to clients that have that block
