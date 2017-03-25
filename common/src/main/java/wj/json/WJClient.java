@@ -1,5 +1,6 @@
 package wj.json;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -14,7 +15,9 @@ public class WJClient {
     private InetAddress ip;
     private int port;
 
-    public WJClient(String ipString, int port) throws UnknownHostException {
+    @JsonCreator
+    public WJClient(@JsonProperty("ip")   String ipString,
+                    @JsonProperty("port") int port) throws UnknownHostException {
         this.setIp(ipString);
         this.setPort(port);
     }
