@@ -12,7 +12,7 @@ import static java.util.Arrays.stream;
  * Created by johan on 21/03/17.
  */
 public class Sha1 {
-    // Return the hash for a block using SHA-1
+    // Return the hash for a block in hexadecimal using SHA-1
     public static String SHAsum(byte[] block) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
@@ -23,13 +23,17 @@ public class Sha1 {
         }
     }
 
+    // Calculate the combined hash of multiple SHA-1 hashes in hexadecimal
     public static String SHAsum(String[] blockHashes) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
             // SHA-1 hash is 160 bytes long
-            byte[] data = new byte[160 * blockHashes.length];
+            byte[] data = new byte[40 * blockHashes.length];
             for (int i = 0; i < blockHashes.length; i++) {
-                System.arraycopy(blockHashes[i].getBytes(), 0, data, i * 160, 160);
+                int hashLen = blockHashes[i].length();
+                byte[] test = blockHashes[i].getBytes();
+
+                System.arraycopy(blockHashes[i].getBytes(), 0, data, i * 40, 40);
             }
 
             return byteArray2Hex(md.digest(data));
