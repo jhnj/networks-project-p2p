@@ -25,8 +25,7 @@ public class FileProvider implements Runnable {
         while (true) {
             try {
                 Socket socket = this.serverSocket.accept();
-                new Thread(new FileProviderThread(socket)).start();
-                new FileProviderThread(socket, fileHandler).run();
+                new Thread(new FileProviderThread(socket, fileHandler)).start();
             } catch (IOException e) {
                 System.out.println("IOException in FileProvider: " + e.getMessage());
             }
