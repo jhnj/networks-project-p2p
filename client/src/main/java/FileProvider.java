@@ -7,10 +7,12 @@ import java.net.Socket;
  */
 public class FileProvider implements Runnable {
     private ServerSocket serverSocket;
+    private FileHandler fileHandler;
     private int port;
 
-    public FileProvider(int port) {
+    public FileProvider(int port, FileHandler fileHandler) {
         this.port = port;
+        this.fileHandler = fileHandler;
         try {
             this.serverSocket = new ServerSocket(port);
         } catch (IOException e) {
@@ -23,7 +25,7 @@ public class FileProvider implements Runnable {
         while (true) {
             try {
                 Socket socket = this.serverSocket.accept();
-                new FileProviderThread(socket).run();
+                new FileProviderThread(socket, fileHandler).run();
             } catch (IOException e) {
                 System.out.println("IOException in FileProvider: " + e.getMessage());
             }

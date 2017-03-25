@@ -21,9 +21,11 @@ public class FileProviderThread implements Runnable {
     private OutputStream output;
     private WJReader reader;
     private WJWriter writer;
+    private FileHandler fileHandler;
 
-    public FileProviderThread(Socket socket) {
+    public FileProviderThread(Socket socket, FileHandler fileHandler) {
         this.socket = socket;
+        this.fileHandler = fileHandler;
 
         try {
             this.input = socket.getInputStream();
@@ -87,8 +89,13 @@ public class FileProviderThread implements Runnable {
         }
     }
 
-    private void handleBlockListRequest(BlockListRequest blockListRequest) {
+    private void handleBlockListRequest(BlockListRequest blockListRequest) throws IOException {
+        System.out.println("BlockList request from :" + this.socket.getInetAddress().getHostName());
 
+        int[] blocks = fileHandler.getBlockList(blockListRequest.getFileHash());
+        BlockListResponse response = new BlockListResponse(blocks);
+        String responseString = WJMessage.stringifyBlockListResponse(response);
+        writer.writeJsonString(responseString);
     }
 
     private void handleBlockRequest(){
