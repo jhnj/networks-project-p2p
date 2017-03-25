@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,10 +16,18 @@ import java.util.Map;
  * Created by walter on 2017-03-23.
  */
 public class FileDownloader {
+    private FileHandler fileHandler;
+    private ClientSession session;
 
-    public static boolean downloadFile(WJFile file, FileHandler fileHandler, ClientSession session) {
+    public FileDownloader(FileHandler fileHandler, ClientSession session) {
+        this.fileHandler = fileHandler;
+        this.session = session;
+    }
+
+    public boolean downloadFile(WJFile file) {
         //Request available peers from the tracker
         WJClient[] clients = null;
+        System.out.println("Requesting file peers from the tracker..");
         try {
             clients = session.requestFileClients(file);
         } catch (IOException | WJException e) {
@@ -27,7 +36,7 @@ public class FileDownloader {
         }
 
         if (clients.length == 0) {
-            System.out.println("No peers available at the moment..");
+            System.out.println("No peers available at the moment.");
             return false;
         }
 
@@ -39,7 +48,18 @@ public class FileDownloader {
         }
 
         //Check what blocks the clients have
-        Map<WJClient, int[]> clientBlocks = new HashMap();
+        System.out.println("Checking what blocks the peers have..");
+        Map<Integer, ArrayList<WJClient>> clientBlocks = this.getBlocksWithClients(file, clients);
+
+        return true;
+    }
+
+    /** Returns a map pointing from block indices to clients that have that block
+     *
+     *  If a block is unavailable, the key is not set
+     */
+    private Map<Integer, ArrayList<WJClient>> getBlocksWithClients(WJFile file, WJClient[] clients) {
+        Map<Integer, ArrayList<WJClient>> clientBlocks = new HashMap(); //Block index -> clients
 
         for (WJClient client : clients) {
             try (Socket socket = new Socket(client.getInetAddress(), client.getPort())) {
@@ -61,7 +81,12 @@ public class FileDownloader {
                 String jsonString = reader.getJsonString();
                 BlockListResponse blockListResponse = WJMessage.parseBlockListResponse(jsonString);
 
-                clientBlocks.put(client, blockListResponse.getBlocks());
+                for (Integer blockIndex : blockListResponse.getBlocks()) {
+                    if (!clientBlocks.containsKey(blockIndex)) {
+                        clientBlocks.put(blockIndex, new ArrayList());
+                    }
+                    clientBlocks.get(blockIndex).add(client);
+                }
             } catch (IOException e) {
                 System.out.println("IOException when retrieving blocks from client: " + e.getMessage());
                 System.out.println("Continuing..");
@@ -71,9 +96,7 @@ public class FileDownloader {
             }
         }
 
-
-
-        return true;
+        return clientBlocks;
     }
 
 }

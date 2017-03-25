@@ -61,11 +61,12 @@ public class Client {
 
                         //Download!
                         System.out.println("Starting download..");
-                        boolean wasDownloaded = FileDownloader.downloadFile(file, fileHandler, session);
+                        FileDownloader fileDownloader = new FileDownloader(fileHandler, session);
+                        boolean wasDownloaded = fileDownloader.downloadFile(file);
                         if (wasDownloaded) {
                             System.out.println("File downloaded!");
                         } else {
-                            System.out.println("Download failed..");
+                            System.out.println("Download failed.");
                         }
 
                         break;
