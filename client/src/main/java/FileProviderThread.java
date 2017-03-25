@@ -72,7 +72,7 @@ public class FileProviderThread implements Runnable {
                     break;
 
                 case "block":
-//                    FileListRequest fileListRequest = WJMessage.parseFileListRequest(jsonString);
+                    BlockRequest blockRequest = WJMessage.parseBlockRequest(jsonString);
                     this.handleBlockRequest();
                     break;
 

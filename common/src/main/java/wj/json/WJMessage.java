@@ -41,6 +41,11 @@ public class WJMessage {
         return objectMapper.readValue(jsonString, BlockListResponse.class);
     }
 
+    public static BlockRequest parseBlockRequest(String jsonString) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(jsonString, BlockRequest.class);
+    }
+
     public static FileClientsRequest parseFileClientsRequest(String jsonString) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(jsonString, FileClientsRequest.class);
