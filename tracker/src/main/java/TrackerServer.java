@@ -30,7 +30,7 @@ public class TrackerServer {
             while (true) {
                 Socket socket = this.serverSocket.accept();
                 System.out.println("Accepted a connection from " + socket.getInetAddress().toString());
-                new Thread(new ClientThread(this, socket)).run();
+                new Thread(new ClientThread(this, socket)).start();
             }
         } catch (IOException e) {
             System.err.println(e.getMessage());
