@@ -6,11 +6,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Created by walter on 2017-03-18.
  */
-public class AddFileResponse {
+public class OKResponse {
     private boolean ok;
 
     @JsonCreator
-    public AddFileResponse(@JsonProperty("ok") boolean ok) {
+    public OKResponse(@JsonProperty("ok") boolean ok) {
         this.ok = ok;
     }
 

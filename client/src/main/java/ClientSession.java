@@ -7,7 +7,6 @@ import wj.writer.WJWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.Socket;
 
 /**
@@ -21,28 +20,43 @@ public class ClientSession {
     private OutputStream out;
     private WJWriter writer;
 
-    public ClientSession(Socket socket) {
+    public ClientSession(Socket socket, int port) {
         this.socket = socket;
         try {
             in = socket.getInputStream();
             reader = new WJReader(in);
             out = socket.getOutputStream();
             writer = new WJWriter(out);
+
+            this.setupPort(port);
         } catch (IOException e) {
             System.err.println("IOException: " + e.getMessage());
         } catch (NumberFormatException e) {
             System.err.println("NumberFormatException: " + e.getMessage());
+        } catch (WJException e) {
+            System.err.println("WJException: " + e.getMessage());
         }
+    }
+
+    public boolean setupPort(int port) throws IOException, WJException {
+        SetupPortRequest setupPortRequest = new SetupPortRequest(port);
+        writer.writeJsonString(WJMessage.stringifySetupPortRequest(setupPortRequest));
+
+        return getOKResponse();
     }
 
     public boolean addFile(WJFile file) throws IOException, WJException {
         AddFileRequest addFileRequest = new AddFileRequest(file);
         writer.writeJsonString(WJMessage.stringifyAddFileRequest(addFileRequest));
 
+        return getOKResponse();
+    }
+
+    private boolean getOKResponse() throws IOException, WJException {
         WJType resultType = reader.getResultType();
         if (resultType == WJType.JSON_STRING) {
             String jsonString = reader.getJsonString();
-            AddFileResponse response = WJMessage.parseAddFileResponse(jsonString);
+            OKResponse response = WJMessage.parseOKResponse(jsonString);
             return response.isOk();
         } else {
             System.err.println("Invalid response type from server");

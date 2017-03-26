@@ -83,7 +83,7 @@ public class FileDownloader {
 
         for (WJClient client : clients) {
             try (Socket socket = new Socket(client.getInetAddress(), client.getPort())) {
-                socket.setSoTimeout(1000); //Timeout read calls after one second
+//                socket.setSoTimeout(1000000); //Timeout read calls after one second
                 InputStream in = socket.getInputStream();
                 WJReader reader = new WJReader(in);
                 OutputStream out = socket.getOutputStream();

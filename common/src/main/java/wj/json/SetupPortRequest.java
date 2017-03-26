@@ -11,7 +11,7 @@ public class SetupPortRequest {
     private int port;
 
     public SetupPortRequest(int port) {
-        this.action = "file_clients";
+        this.action = "port";
         this.port = port;
     }
 

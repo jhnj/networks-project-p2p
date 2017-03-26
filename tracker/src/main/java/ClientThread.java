@@ -13,6 +13,8 @@ import java.net.Socket;
 import java.util.HashSet;
 import java.util.Set;
 
+import static wj.reader.WJType.JSON_STRING;
+
 public class ClientThread implements Runnable {
     private TrackerServer server;
     private Socket socket;
@@ -31,14 +33,30 @@ public class ClientThread implements Runnable {
         try {
             this.input = socket.getInputStream();
             this.output = socket.getOutputStream();
-            this.client = new WJClient(this.socket.getInetAddress().getHostAddress(), this.socket.getPort());
+
+            this.reader = new WJReader(this.input);
+            this.writer = new WJWriter(this.output);
+
+            WJType resultType = this.reader.getResultType();
+            if (resultType != JSON_STRING) {
+                System.err.println("Client did not send SetupPortRequest");
+            }
+
+            int port = this.getJSONPortNumber();
+
+            OKResponse response = new OKResponse(port != -1);
+            String responseString = WJMessage.stringifyOKResponse(response);
+            writer.writeJsonString(responseString);
+
+            if (port == -1) {
+                System.err.println("Error in SetupPortRequest");
+            }
+
+            this.client = new WJClient(this.socket.getInetAddress().getHostAddress(), port);
         } catch (IOException e) {
             System.err.println(e);
             this.close();
         }
-
-        this.reader = new WJReader(this.input);
-        this.writer = new WJWriter(this.output);
     }
 
     public void run() {
@@ -60,6 +78,25 @@ public class ClientThread implements Runnable {
         } catch (IOException e) {
             System.out.println("Client " + this.socket.getInetAddress() + " disconnected: " + e.getMessage());
             this.close();
+        }
+    }
+
+    private int getJSONPortNumber() {
+        try {
+            String jsonString = this.reader.getJsonString();
+            String action = WJMessage.getAction(jsonString);
+            if (action.equals("port")) {
+                SetupPortRequest setupPortRequest = WJMessage.parseSetupPortRequest(jsonString);
+                return setupPortRequest.getPort();
+            }
+
+            return -1;
+        } catch (IOException e) {
+            System.out.println("IOException while parsing JSON string: " + e.getMessage());
+            return -1;
+        } catch (WJException e) {
+            System.out.println("Error while retrieving JSON string: " + e.getMessage());
+            return -1;
         }
     }
 
@@ -113,8 +150,8 @@ public class ClientThread implements Runnable {
         }
 
         //Respond to the request
-        AddFileResponse response = new AddFileResponse(wasAdded);
-        String responseString = WJMessage.stringifyAddFileResponse(response);
+        OKResponse response = new OKResponse(wasAdded);
+        String responseString = WJMessage.stringifyOKResponse(response);
         writer.writeJsonString(responseString);
     }
 

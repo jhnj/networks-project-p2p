@@ -20,7 +20,7 @@ public class WJFileOnDisk extends WJFile {
     private String path;
     private File file;
     private RandomAccessFile rf;
-    private Boolean[] blocksOnDisk;
+    private boolean[] blocksOnDisk;
 
     public WJFileOnDisk(@JsonProperty("name") String name,
                         @JsonProperty("size") long size,
@@ -30,7 +30,7 @@ public class WJFileOnDisk extends WJFile {
         super(name, size, hash, blocks);
         this.path = path;
         this.file = new File(path);
-        blocksOnDisk = new Boolean[blocks.length];
+        blocksOnDisk = new boolean[blocks.length];
     }
 
     @JsonIgnore
@@ -43,8 +43,16 @@ public class WJFileOnDisk extends WJFile {
         this.file = new File(this.path);
     }
 
+    /**
+     * Used to set all blocks to found for a locally uploaded file
+     */
     @JsonIgnore
-    public Boolean[] getBlocksOnDisk() {
+    public void setLocal() {
+        Arrays.fill(blocksOnDisk, true);
+    }
+
+    @JsonIgnore
+    public boolean[] getBlocksOnDisk() {
         return blocksOnDisk;
     }
 

@@ -35,7 +35,9 @@ public class WJFileOnDiskFactory {
 
         String hash = Sha1.SHAsum(blockHashes);
 
-        return new WJFileOnDisk(name, size, hash, blockHashes, path);
+        WJFileOnDisk wjFileOnDisk =  new WJFileOnDisk(name, size, hash, blockHashes, path);
+        wjFileOnDisk.setLocal();
+        return wjFileOnDisk;
     }
 
     /** Instantiates a WJFileOnDisk based on a remote WJFile

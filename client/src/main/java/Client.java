@@ -19,10 +19,10 @@ public class Client {
             System.out.print("Enter tracker ip:");
             String tracker = consoleReader.readLine();
 
-            Socket socket = new Socket(tracker, 3004, InetAddress.getByName("localhost"), port);
-            ClientSession session = new ClientSession(socket);
+            Socket socket = new Socket(tracker, 3004);
+            ClientSession session = new ClientSession(socket, port);
             FileHandler fileHandler = new FileHandler(session);
-
+            new Thread(new FileProvider(port, fileHandler)).start();
 
             while (true) {
                 System.out.println("Press A to add Files and D to download files");

@@ -31,9 +31,9 @@ public class WJMessage {
         return objectMapper.readValue(jsonString, AddFileRequest.class);
     }
 
-    public static AddFileResponse parseAddFileResponse(String jsonString) throws IOException {
+    public static OKResponse parseOKResponse(String jsonString) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(jsonString, AddFileResponse.class);
+        return objectMapper.readValue(jsonString, OKResponse.class);
     }
 
     public static BlockListRequest parseBlockListRequest(String jsonString) throws IOException {
@@ -81,9 +81,9 @@ public class WJMessage {
         return objectMapper.writeValueAsString(addFileRequest);
     }
 
-    public static String stringifyAddFileResponse(AddFileResponse addFileResponse) throws IOException {
+    public static String stringifyOKResponse(OKResponse okResponse) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(addFileResponse);
+        return objectMapper.writeValueAsString(okResponse);
     }
 
     public static String stringifyBlockListRequest(BlockListRequest blockListRequest) throws IOException {
