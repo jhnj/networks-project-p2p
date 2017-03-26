@@ -8,6 +8,8 @@ import wj.json.WJFile;
 import wj.sha1.Sha1;
 
 import java.io.*;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 
 /**
  * Created by johan on 21/03/17.
@@ -51,6 +53,11 @@ public class WJFileOnDisk extends WJFile {
             return false;
         }
         return blocksOnDisk[block];
+    }
+
+    @JsonIgnore
+    public int getBlockNumber(String blockHash) {
+        return Arrays.asList(this.getBlocks()).indexOf(blockHash);
     }
 
     @JsonIgnore

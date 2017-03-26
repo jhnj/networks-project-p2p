@@ -1,3 +1,4 @@
+import wj.exceptions.BlockException;
 import wj.exceptions.FileNotInServerException;
 import wj.exceptions.UserNotInFileException;
 import wj.exceptions.WJException;
@@ -75,17 +76,15 @@ public class FileProviderThread implements Runnable {
 
                 case "block":
                     BlockRequest blockRequest = WJMessage.parseBlockRequest(jsonString);
-                    this.handleBlockRequest();
+                    this.handleBlockRequest(blockRequest);
                     break;
 
                 default:
                     System.out.println("Unknown action type " + action + ", skipping");
                     break;
             }
-        } catch (IOException e) {
-            System.out.println("IOException while parsing JSON string: " + e.getMessage());
-        } catch (WJException e) {
-            System.out.println("Error while retrieving JSON string: " + e.getMessage());
+        } catch (IOException | WJException | BlockException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -98,8 +97,11 @@ public class FileProviderThread implements Runnable {
         writer.writeJsonString(responseString);
     }
 
-    private void handleBlockRequest(){
+    private void handleBlockRequest(BlockRequest blockRequest) throws IOException, BlockException {
+        System.out.println("Block request from :" + this.socket.getInetAddress().getHostName());
 
+        byte[] block = fileHandler.getBlock(blockRequest.getFileHash(), blockRequest.getBlockHash());
+        writer.writeBinary(block);
     }
 
 
