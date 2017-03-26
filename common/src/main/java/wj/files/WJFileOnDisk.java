@@ -43,6 +43,7 @@ public class WJFileOnDisk extends WJFile {
         this.file = new File(this.path);
     }
 
+    @JsonIgnore
     public Boolean[] getBlocksOnDisk() {
         return blocksOnDisk;
     }
