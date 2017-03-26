@@ -21,6 +21,11 @@ public class WJMessage {
         }
     }
 
+    public static SetupPortRequest parseSetupPortRequest(String jsonString) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(jsonString, SetupPortRequest.class);
+    }
+
     public static AddFileRequest parseAddFileRequest(String jsonString) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(jsonString, AddFileRequest.class);
@@ -64,6 +69,11 @@ public class WJMessage {
     public static FileListResponse parseFileListResponse(String jsonString) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(jsonString, FileListResponse.class);
+    }
+
+    public static String stringifySetupPortRequest(SetupPortRequest setupPortRequest) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(setupPortRequest);
     }
 
     public static String stringifyAddFileRequest(AddFileRequest addFileRequest) throws IOException {
