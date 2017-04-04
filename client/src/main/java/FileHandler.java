@@ -67,16 +67,12 @@ public class FileHandler {
         return true;
     }
 
-    public byte[] getBlock(String hash, String blockHash) throws IOException, BlockException {
+    public byte[] getBlock(String hash, int blockIndex) throws IOException, BlockException {
         WJFileOnDisk fileOnDisk = this.files.get(hash);
         if (fileOnDisk == null) {
             throw new IOException("File not found");
         }
-        int block = fileOnDisk.getBlockNumber(blockHash);
-        if (block == -1) {
-            throw new BlockException("BlockHash not found");
-        }
-        return fileOnDisk.readBlock(block);
+        return fileOnDisk.readBlock(blockIndex);
     }
 
     public boolean addLocalFile(String name, String path) throws IOException, WJException {

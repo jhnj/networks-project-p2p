@@ -100,7 +100,7 @@ public class FileProviderThread implements Runnable {
     private void handleBlockRequest(BlockRequest blockRequest) throws IOException, BlockException {
         System.out.println("Block request from :" + this.socket.getInetAddress().getHostName());
 
-        byte[] block = fileHandler.getBlock(blockRequest.getFileHash(), blockRequest.getBlockHash());
+        byte[] block = fileHandler.getBlock(blockRequest.getFileHash(), blockRequest.getBlockIndex());
         writer.writeBinary(block);
     }
 

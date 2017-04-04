@@ -56,14 +56,62 @@ public class FileDownloader {
             blockClientsPQ.add(new BlockClients(entry.getKey(), entry.getValue()));
         }
 
+        //Download the blocks
+        while (!blockClientsPQ.isEmpty()) {
+            BlockClients blockClient = blockClientsPQ.poll();
+            Boolean blockDownloaded = false;
+
+            for (WJClient client : blockClient.clients) {
+                try {
+                    //Try downloading the block from a client
+                    byte[] data = this.downloadBlockFromClient(file.getHash(), blockClient.block, client);
+
+                    //Store the block
+                    fileHandler.storeBlock(file.getHash(), blockClient.block, data);
+                    blockDownloaded = true;
+                    break;
+                } catch (IOException | WJException e) {
+                    System.out.println("Unable to download block " + blockClient.block + " from client " + client.getIp()
+                                        + ", trying the next client");
+                }
+            }
+
+            if (blockDownloaded) {
+                System.out.println("Downloaded block " + blockClient.block);
+            } else {
+                System.out.println("Unable to download block " + blockClient.block + ", skipping");
+            }
+        }
+
         return true;
+    }
+
+    private byte[] downloadBlockFromClient(String fileHash, Integer block, WJClient client) throws IOException, WJException {
+        Socket socket = new Socket(client.getInetAddress(), client.getPort());
+        WJWriter writer = new WJWriter(socket.getOutputStream());
+        WJReader reader = new WJReader(socket.getInputStream());
+
+        BlockRequest blockRequest = new BlockRequest(fileHash, block);
+        writer.writeJsonString(WJMessage.stringifyBlockRequest(blockRequest));
+
+        WJType type = reader.getResultType();
+
+        if (type != WJType.BINARY) {
+            throw new WJException("Bad response type from server for block from client request: " + type);
+        }
+
+        byte[] result = reader.getBinary();
+
+        socket.close();
+
+        return result;
     }
 
     private class BlockClients implements Comparable<BlockClients> {
         public Integer block;
-        public ArrayList clients;
+        public ArrayList<WJClient> clients;
 
-        public BlockClients(Integer block, ArrayList clients) {
+        public BlockClients(Integer block, ArrayList<WJClient> clients) {
             this.block = block;
             this.clients = clients;
         }
