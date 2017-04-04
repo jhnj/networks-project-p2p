@@ -46,8 +46,9 @@ public class WJReader {
                 case (short) 1:
                     this.binary = readBinary(dataLength);
                     type = WJType.BINARY;
+                    break;
                 default:
-                    throw new WJException("Invalid type");
+                    throw new WJException("Invalid type: " + headers[0]);
 
             }
 
