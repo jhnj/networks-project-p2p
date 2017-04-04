@@ -22,12 +22,17 @@ public class WJWriter {
             throw new IOException("Data too large");
         }
 
-        // Write header, data length big endian
-        outputStream.write((byte) 0x01);
-        outputStream.write((byte) (length >> 8) & 0xFF);
-        outputStream.write((byte) length & 0xFF);
+        byte[] outData = new byte[3 + length];
 
-        outputStream.write(data);
+        //Set header data, data length big endian
+        outData[0] = 0x01; //Type: Binary
+        outData[1] = (byte) ((length >> 8) & 0xFF);
+        outData[2] = (byte) (length & 0xFF);
+
+        //Add the given data
+        System.arraycopy(data, 0, outData, 3, length);
+
+        outputStream.write(outData);
         outputStream.flush();
     }
 
