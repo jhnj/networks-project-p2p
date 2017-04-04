@@ -81,6 +81,11 @@ public class WJMessage {
         return objectMapper.writeValueAsString(addFileRequest);
     }
 
+    public static String stringifyBlockRequest(BlockRequest blockRequest) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(blockRequest);
+    }
+
     public static String stringifyOKResponse(OKResponse okResponse) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(okResponse);
