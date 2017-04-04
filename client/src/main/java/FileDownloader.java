@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.*;
+import java.util.stream.IntStream;
 
 /**
  * Created by walter on 2017-03-23.
@@ -23,21 +24,6 @@ public class FileDownloader {
     }
 
     public boolean downloadFile(WJFile file) {
-        //Request available peers from the tracker
-        WJClient[] clients = null;
-        System.out.println("Requesting file peers from the tracker..");
-        try {
-            clients = session.requestFileClients(file);
-        } catch (IOException | WJException e) {
-            System.err.println("Unable to request file peers: " + e.getMessage());
-            return false;
-        }
-
-        if (clients.length == 0) {
-            System.out.println("No peers available at the moment.");
-            return false;
-        }
-
         //Add the file locally
         try {
             fileHandler.addRemoteFile(file);
@@ -46,14 +32,63 @@ public class FileDownloader {
             return false;
         }
 
+        //For storing the remaining blocks
+        Set<Integer> remainingBlocks = new HashSet();
+        IntStream.range(0, file.getBlocks().length).forEach(i -> remainingBlocks.add(i));
+
+        //Download sets of blocks until all have been downloaded
+        while (!remainingBlocks.isEmpty()) {
+            //Attempts to download all the remaining blocks
+            Set downloadedBlocks = attemptToDownloadBlocks(file, remainingBlocks);
+
+            //Remove the blocks that were successfully downloaded
+            remainingBlocks.removeAll(downloadedBlocks);
+
+            int downloadedBlocksCount = file.getBlocks().length - remainingBlocks.size();
+            System.out.println(String.format("Downloaded %d/%d blocks",
+                                             downloadedBlocksCount,
+                                             file.getBlocks().length));
+        }
+
+        return true;
+    }
+
+    /** Attempts to download and store the specified blocks
+     *
+     * @return The set of block indices that were downloaded successfully
+     */
+    private Set<Integer> attemptToDownloadBlocks(WJFile file, Set<Integer> blocksToDownload) {
+        //Request available peers from the tracker
+        WJClient[] clients = null;
+        System.out.println("Requesting file peers from the tracker..");
+
+        Set<Integer> downloadedBlocks = new HashSet();
+
+        try {
+            clients = session.requestFileClients(file);
+        } catch (IOException | WJException e) {
+            System.err.println("Unable to request file peers: " + e.getMessage());
+            return downloadedBlocks;
+        }
+
+        if (clients.length == 0) {
+            System.out.println("No peers available at the moment.");
+            return downloadedBlocks;
+        }
+
         //Check what blocks the clients have
         System.out.println("Checking what blocks the peers have..");
+
+        //Block index -> ArrayList<WJClient>
         Map<Integer, ArrayList<WJClient>> clientBlocks = this.getBlocksWithClients(file, clients);
 
         //Add the clients to a priority queue so that the blocks with the fewest clients come first
+        //BUT, only those specified for download in the parameter are added
         PriorityQueue<BlockClients> blockClientsPQ = new PriorityQueue();
         for (Map.Entry<Integer, ArrayList<WJClient>> entry : clientBlocks.entrySet()) {
-            blockClientsPQ.add(new BlockClients(entry.getKey(), entry.getValue()));
+            if (blocksToDownload.contains(entry.getKey())) {
+                blockClientsPQ.add(new BlockClients(entry.getKey(), entry.getValue()));
+            }
         }
 
         //Download the blocks
@@ -72,18 +107,18 @@ public class FileDownloader {
                     break;
                 } catch (IOException | WJException e) {
                     System.out.println("Unable to download block " + blockClient.block + " from client " + client.getIp()
-                                        + ", trying the next client");
+                            + ", trying the next client");
                 }
             }
 
             if (blockDownloaded) {
-                System.out.println("Downloaded block " + blockClient.block);
+                downloadedBlocks.add(blockClient.block);
             } else {
                 System.out.println("Unable to download block " + blockClient.block + ", skipping");
             }
         }
 
-        return true;
+        return downloadedBlocks;
     }
 
     private byte[] downloadBlockFromClient(String fileHash, Integer block, WJClient client) throws IOException, WJException {
