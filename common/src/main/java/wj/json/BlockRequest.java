@@ -9,21 +9,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class BlockRequest {
     private String action;
     private String fileHash;
-    private String blockHash;
+    private int blockIndex;
 
-    public BlockRequest(String fileHash, String blockHash) {
+    public BlockRequest(String fileHash, int blockIndex) {
         this.action = "block";
         this.fileHash = fileHash;
-        this.blockHash = blockHash;
+        this.blockIndex = blockIndex;
     }
 
     @JsonCreator
     public BlockRequest(@JsonProperty("action")     String action,
-                        @JsonProperty("fileHash")   String fileHash,
-                        @JsonProperty("blockHash")  String blockHash) {
+                        @JsonProperty("file_hash")   String fileHash,
+                        @JsonProperty("block_index")  int blockIndex) {
         this.action = action;
         this.fileHash = fileHash;
-        this.blockHash = blockHash;
+        this.blockIndex = blockIndex;
     }
 
     public String getAction() {
@@ -42,11 +42,11 @@ public class BlockRequest {
         this.fileHash = fileHash;
     }
 
-    public String getBlockHash() {
-        return blockHash;
+    public int getBlockIndex() {
+        return blockIndex;
     }
 
-    public void setBlockHash(String blockHash) {
-        this.blockHash = blockHash;
+    public void setBlockIndex(int blockIndex) {
+        this.blockIndex = blockIndex;
     }
 }
