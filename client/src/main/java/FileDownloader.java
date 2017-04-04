@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -85,11 +86,11 @@ public class FileDownloader {
         //Add the clients to a priority queue so that the blocks with the fewest clients come first
         //BUT, only those specified for download in the parameter are added
         PriorityQueue<BlockClients> blockClientsPQ = new PriorityQueue();
-        for (Map.Entry<Integer, ArrayList<WJClient>> entry : clientBlocks.entrySet()) {
-            if (blocksToDownload.contains(entry.getKey())) {
-                blockClientsPQ.add(new BlockClients(entry.getKey(), entry.getValue()));
-            }
-        }
+        clientBlocks.entrySet()
+                    .stream()
+                    .filter(entry -> blocksToDownload.contains(entry.getKey()))
+                    .map(entry -> new BlockClients(entry.getKey(), entry.getValue()))
+                    .forEach(blockClient -> blockClientsPQ.add(blockClient));
 
         //Download the blocks
         while (!blockClientsPQ.isEmpty()) {
