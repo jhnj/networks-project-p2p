@@ -84,7 +84,7 @@ public class WJFileOnDisk extends WJFile {
             rf.read(data);
         }
 
-        if (this.getBlocks()[block].equals(Sha1.SHAsum(data))) {
+        if (!this.getBlocks()[block].equals(Sha1.SHAsum(data))) {
             throw new BlockException("Invalid hash");
         }
 
