@@ -58,7 +58,7 @@ public class FileProviderThread implements Runnable {
                 }
             }
         } catch (IOException e) {
-            System.out.println("IOException: " + e.getMessage());
+//            System.out.println("IOException: " + e.getMessage());
             this.close();
         }
     }
@@ -89,7 +89,7 @@ public class FileProviderThread implements Runnable {
     }
 
     private void handleBlockListRequest(BlockListRequest blockListRequest) throws IOException {
-        System.out.println("BlockList request from :" + this.socket.getInetAddress().getHostName());
+//        System.out.println("BlockList request from :" + this.socket.getInetAddress().getHostName());
 
         int[] blocks = fileHandler.getBlockList(blockListRequest.getFileHash());
         BlockListResponse response = new BlockListResponse(blocks);
@@ -98,7 +98,7 @@ public class FileProviderThread implements Runnable {
     }
 
     private void handleBlockRequest(BlockRequest blockRequest) throws IOException, BlockException {
-        System.out.println("Block request from :" + this.socket.getInetAddress().getHostName());
+//        System.out.println("Block request from :" + this.socket.getInetAddress().getHostName());
 
         byte[] block = fileHandler.getBlock(blockRequest.getFileHash(), blockRequest.getBlockIndex());
         writer.writeBinary(block);
