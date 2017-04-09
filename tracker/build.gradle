@@ -1,3 +1,14 @@
 group 'root'
 version '1.0-SNAPSHOT'
 
+apply plugin: 'application'
+
+mainClassName = 'Tracker'
+
+jar {
+    baseName = 'tracker'
+}
+
+run {
+    standardInput = System.in
+}

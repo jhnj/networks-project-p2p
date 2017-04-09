@@ -1,5 +1,15 @@
 group 'root'
 version '1.0-SNAPSHOT'
 
+apply plugin: 'application'
 
+mainClassName = 'Client'
+
+jar {
+    baseName = 'client'
+}
+
+run {
+    standardInput = System.in
+}
 
