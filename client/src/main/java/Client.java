@@ -16,7 +16,7 @@ public class Client {
             BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
             System.out.print("Choose port: ");
             int port = Integer.parseInt(consoleReader.readLine());
-            System.out.print("Enter tracker ip:");
+            System.out.print("Enter tracker ip: ");
             String tracker = consoleReader.readLine();
 
             InetAddress trackerAddress = InetAddress.getByName(tracker);
