@@ -65,7 +65,7 @@ public class Client {
 
                         //Download!
                         System.out.println("Starting download..");
-                        FileDownloader fileDownloader = new FileDownloader(fileHandler, session);
+                        FileDownloader fileDownloader = new FileDownloader(fileHandler, session, port);
                         boolean wasDownloaded = fileDownloader.downloadFile(file, filePath);
                         if (wasDownloaded) {
                             System.out.println("File downloaded!");

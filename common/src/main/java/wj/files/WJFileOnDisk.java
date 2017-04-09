@@ -108,6 +108,7 @@ public class WJFileOnDisk extends WJFile {
         try (RandomAccessFile rf = new RandomAccessFile(file, "rw")) {
             rf.seek(block * BLOCK_SIZE);
             rf.write(data);
+            blocksOnDisk[block] = true;
         }
     }
 

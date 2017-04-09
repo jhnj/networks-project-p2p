@@ -88,8 +88,10 @@ public class FileHandler {
         return true;
     }
 
-    public boolean addRemoteFile(WJFile file, File path) throws IOException {
+    public boolean addRemoteFile(WJFile file, File path) throws IOException, WJException {
         WJFileOnDisk fileOnDisk = initiateRemoteFile(file, path);
+
+        session.addFile(fileOnDisk);
         files.put(fileOnDisk.getHash(), fileOnDisk);
         return true;
     }

@@ -14,6 +14,10 @@ import java.net.Socket;
  *
  */
 public class ClientSession {
+    public Socket getSocket() {
+        return socket;
+    }
+
     private Socket socket;
     private InputStream in;
     private WJReader reader;

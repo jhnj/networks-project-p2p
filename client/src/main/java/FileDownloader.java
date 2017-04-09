@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,17 +20,19 @@ import java.util.stream.IntStream;
 public class FileDownloader {
     private FileHandler fileHandler;
     private ClientSession session;
+    private int port;
 
-    public FileDownloader(FileHandler fileHandler, ClientSession session) {
+    public FileDownloader(FileHandler fileHandler, ClientSession session, int port) {
         this.fileHandler = fileHandler;
         this.session = session;
+        this.port = port;
     }
 
     public boolean downloadFile(WJFile file, File filePath) {
         //Add the file locally
         try {
             fileHandler.addRemoteFile(file, filePath);
-        } catch (IOException e) {
+        } catch (IOException | WJException e) {
             System.err.println("Unable to add the remote file locally: " + e.getMessage());
             return false;
         }
@@ -167,8 +170,13 @@ public class FileDownloader {
         Map<Integer, ArrayList<WJClient>> clientBlocks = new HashMap(); //Block index -> clients
 
         for (WJClient client : clients) {
+            // Skip itself from the client list
+            if ((client.getPort() == this.port) &&
+                 client.getInetAddress().equals(this.session.getSocket().getInetAddress())) {
+                continue;
+            }
             try (Socket socket = new Socket(client.getInetAddress(), client.getPort())) {
-//                socket.setSoTimeout(1000000); //Timeout read calls after one second
+//              TODO:  socket.setSoTimeout(1000000); //Timeout read calls after one second
                 InputStream in = socket.getInputStream();
                 WJReader reader = new WJReader(in);
                 OutputStream out = socket.getOutputStream();

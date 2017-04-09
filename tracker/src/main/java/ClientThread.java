@@ -161,6 +161,8 @@ public class ClientThread implements Runnable {
         try {
             Set<WJClient> clientsSet = this.server.getClientsWithFile(request.getFile());
             clients = clientsSet.toArray(new WJClient[clientsSet.size()]);
+            // addClientToFile so that the client downloading the file can upload it to peers at the same time
+            this.server.addClientToFile(request.getFile(), this.client);
         } catch (FileNotInServerException e) {
             System.err.println("FileNotInServerException requesting clients for " + request.getFile().getName() + ": "
                                 + e.getMessage());
