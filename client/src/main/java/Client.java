@@ -19,7 +19,8 @@ public class Client {
             System.out.print("Enter tracker ip:");
             String tracker = consoleReader.readLine();
 
-            Socket socket = new Socket(tracker, 3004);
+            InetAddress trackerAddress = InetAddress.getByName(tracker);
+            Socket socket = new Socket(trackerAddress, 3004);
             ClientSession session = new ClientSession(socket, port);
             FileHandler fileHandler = new FileHandler(session);
             new Thread(new FileProvider(port, fileHandler)).start();
