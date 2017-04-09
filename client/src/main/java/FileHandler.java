@@ -3,6 +3,7 @@ import wj.exceptions.WJException;
 import wj.files.WJFileOnDisk;
 import wj.json.WJFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -87,8 +88,8 @@ public class FileHandler {
         return true;
     }
 
-    public boolean addRemoteFile(WJFile file) throws IOException {
-        WJFileOnDisk fileOnDisk = initiateRemoteFile(file);
+    public boolean addRemoteFile(WJFile file, File path) throws IOException {
+        WJFileOnDisk fileOnDisk = initiateRemoteFile(file, path);
         files.put(fileOnDisk.getHash(), fileOnDisk);
         return true;
     }

@@ -43,8 +43,8 @@ public class WJFileOnDiskFactory {
     /** Instantiates a WJFileOnDisk based on a remote WJFile
      *
      *  Creates an empty file with the same name as the WJFile */
-    public static WJFileOnDisk initiateRemoteFile(WJFile file) throws IOException {
-        File diskFile = new File(file.getName());
+    public static WJFileOnDisk initiateRemoteFile(WJFile file, File filePath) throws IOException {
+        File diskFile = new File(filePath, file.getName());
         boolean fileAdded = diskFile.createNewFile();
         if (!fileAdded) {
             throw new IOException("Unable to add the file locally");

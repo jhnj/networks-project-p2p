@@ -4,6 +4,7 @@ import wj.reader.WJReader;
 import wj.reader.WJType;
 import wj.writer.WJWriter;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -24,10 +25,10 @@ public class FileDownloader {
         this.session = session;
     }
 
-    public boolean downloadFile(WJFile file) {
+    public boolean downloadFile(WJFile file, File filePath) {
         //Add the file locally
         try {
-            fileHandler.addRemoteFile(file);
+            fileHandler.addRemoteFile(file, filePath);
         } catch (IOException e) {
             System.err.println("Unable to add the remote file locally: " + e.getMessage());
             return false;

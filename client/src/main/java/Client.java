@@ -59,10 +59,14 @@ public class Client {
                             }
                         } while (file == null);
 
+                        System.out.println("Enter download location: ");
+                        String downloadPath = consoleReader.readLine();
+                        File filePath = new File(downloadPath.replaceFirst("^~", System.getProperty("user.home")));
+
                         //Download!
                         System.out.println("Starting download..");
                         FileDownloader fileDownloader = new FileDownloader(fileHandler, session);
-                        boolean wasDownloaded = fileDownloader.downloadFile(file);
+                        boolean wasDownloaded = fileDownloader.downloadFile(file, filePath);
                         if (wasDownloaded) {
                             System.out.println("File downloaded!");
                         } else {
